@@ -24,11 +24,11 @@ namespace wechaty_grpc_webapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IContactService, ContactService>();
-            services.AddSingleton<IFriendShipService, FriendShipService>();
-            services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton<IRoomService, RoomService>();
-            services.AddSingleton<ITagService, TagService>();
+            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IFriendShipService, FriendShipService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<ITagService, TagService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

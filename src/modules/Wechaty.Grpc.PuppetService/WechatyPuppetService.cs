@@ -23,7 +23,10 @@ namespace Wechaty.Grpc.PuppetService
                 Endpoint = "https://117.68.179.10:9001",
                 Token = "insecure_4ad64522-e86d-4a18-afc9-986a9e2078ef"
             };
-            _grpcClient = InitGrpcClient(option);
+            if (_grpcClient==null)
+            {
+                _grpcClient = InitGrpcClient(option);
+            }
         }
 
 

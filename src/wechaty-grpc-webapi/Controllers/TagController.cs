@@ -14,6 +14,10 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpPost]
         public async Task<ActionResult> TagContactAdd(string tagId, string contactId)
         {
+            if (string.IsNullOrWhiteSpace(tagId) || string.IsNullOrWhiteSpace(contactId))
+            {
+                return BadRequest("请求参数异常");
+            }
             await _tagService.TagContactAdd(tagId, contactId);
             return Ok();
         }

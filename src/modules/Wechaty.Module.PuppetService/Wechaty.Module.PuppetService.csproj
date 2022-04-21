@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Wechaty.Grpc.PuppetService\Wechaty.Grpc.PuppetService.csproj" />
+    <ProjectReference Include="..\Wechaty.Grpc.PuppetService\Wechaty.Grpc.PuppetService.csproj" />
     <ProjectReference Include="..\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
   </ItemGroup>
 

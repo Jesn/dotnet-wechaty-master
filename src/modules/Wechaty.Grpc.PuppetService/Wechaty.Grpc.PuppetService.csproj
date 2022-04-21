@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\modules\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
-    <ProjectReference Include="..\modules\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
+    <ProjectReference Include="..\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
+    <ProjectReference Include="..\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
   </ItemGroup>
 
 </Project>
