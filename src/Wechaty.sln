@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30225.117
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wechaty", "Wechaty\Wechaty.csproj", "{D8440082-B86A-42CF-9F26-C3327A5EAEBF}"
 EndProject
@@ -35,6 +35,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wechaty.Plugin.Contrib", "Plugins\Wechaty.Plugin.Contrib\Wechaty.Plugin.Contrib.csproj", "{3BE2B718-46F6-42ED-95AE-E54048F826F1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wechaty.Module.PuppetService", "modules\Wechaty.Module.PuppetService\Wechaty.Module.PuppetService.csproj", "{F8F0861D-436C-4847-BE24-6C2578120F11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wechaty.Grpc.PuppetService", "Wechaty.Grpc.PuppetService\Wechaty.Grpc.PuppetService.csproj", "{1D329DAB-488A-4DE2-806C-85C8F0E9E107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wechaty-grpc-webapi", "wechaty-grpc-webapi\wechaty-grpc-webapi.csproj", "{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,6 +182,30 @@ Global
 		{F8F0861D-436C-4847-BE24-6C2578120F11}.Release|x64.Build.0 = Release|Any CPU
 		{F8F0861D-436C-4847-BE24-6C2578120F11}.Release|x86.ActiveCfg = Release|Any CPU
 		{F8F0861D-436C-4847-BE24-6C2578120F11}.Release|x86.Build.0 = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|x64.Build.0 = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107}.Release|x86.Build.0 = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|x64.Build.0 = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Debug|x86.Build.0 = Debug|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|x64.ActiveCfg = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|x64.Build.0 = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|x86.ActiveCfg = Release|Any CPU
+		{2E52ADF5-16DB-442C-83ED-C110EAC7BB5F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +220,7 @@ Global
 		{E8D6F103-FCBF-4E4B-AA46-74B2929B09D5} = {AB934DD9-0575-48CB-9CA0-2F616179C4AD}
 		{3BE2B718-46F6-42ED-95AE-E54048F826F1} = {E44372E1-6A41-4B07-A1D2-E9C0CDA1433E}
 		{F8F0861D-436C-4847-BE24-6C2578120F11} = {AB934DD9-0575-48CB-9CA0-2F616179C4AD}
+		{1D329DAB-488A-4DE2-806C-85C8F0E9E107} = {AB934DD9-0575-48CB-9CA0-2F616179C4AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E484A767-EB25-4862-9955-84FD387F11A0}

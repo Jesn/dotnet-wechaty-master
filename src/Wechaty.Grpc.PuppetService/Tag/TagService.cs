@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 
-namespace Wechaty.Module.PuppetService
+namespace Wechaty.Grpc.PuppetService.Tag
 {
-    public partial class GrpcPuppet
+    public class TagService : WechatyPuppetService, ITagService
     {
         #region Tag
-        public override async Task TagContactAdd(string tagId, string contactId)
+        public async Task TagContactAdd(string tagId, string contactId)
         {
             var request = new TagContactAddRequest()
             {
@@ -20,7 +20,7 @@ namespace Wechaty.Module.PuppetService
             await _grpcClient.TagContactAddAsync(request);
         }
 
-        public override async Task TagContactDelete(string tagId)
+        public async Task TagContactDelete(string tagId)
         {
             var request = new TagContactDeleteRequest()
             {
@@ -30,7 +30,17 @@ namespace Wechaty.Module.PuppetService
             await _grpcClient.TagContactDeleteAsync(request);
         }
 
-        public override async Task<List<string>> TagContactList(string contactId)
+        public async Task<List<string>> TagContactList(string contactId)
+        {
+            // TODO   确认这里的 contactId 参数是否有效
+            var request = new TagContactListRequest();
+
+
+            var response = await _grpcClient.TagContactListAsync(request);
+            return response.Ids.ToList();
+        }
+
+        public async Task<List<string>> TagContactList()
         {
             var request = new TagContactListRequest();
 
@@ -38,15 +48,7 @@ namespace Wechaty.Module.PuppetService
             return response.Ids.ToList();
         }
 
-        public override async Task<List<string>> TagContactList()
-        {
-            var request = new TagContactListRequest();
-
-            var response = await _grpcClient.TagContactListAsync(request);
-            return response.Ids.ToList();
-        }
-
-        public override async Task TagContactRemove(string tagId, string contactId)
+        public async Task TagContactRemove(string tagId, string contactId)
         {
             var request = new TagContactRemoveRequest()
             {

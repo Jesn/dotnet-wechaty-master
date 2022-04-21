@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 
-namespace Wechaty.Module.PuppetService
+namespace Wechaty.Grpc.PuppetService.FriendShip
 {
-    public partial class GrpcPuppet
+    public class FriendShipService : WechatyPuppetService, IFriendShipService
     {
         #region Friendship
 
-        public override async Task FriendshipAccept(string friendshipId)
+        public async Task FriendshipAccept(string friendshipId)
         {
             var request = new FriendshipAcceptRequest()
             { Id = friendshipId };
@@ -15,7 +15,7 @@ namespace Wechaty.Module.PuppetService
             await _grpcClient.FriendshipAcceptAsync(request);
         }
 
-        public override async Task FriendshipAdd(string contactId, string? hello)
+        public async Task FriendshipAdd(string contactId, string? hello)
         {
             var request = new FriendshipAddRequest()
             {
@@ -25,7 +25,7 @@ namespace Wechaty.Module.PuppetService
             var response = await _grpcClient.FriendshipAddAsync(request);
         }
 
-        public override async Task<string?> FriendshipSearchPhone(string phone)
+        public async Task<string?> FriendshipSearchPhone(string phone)
         {
             var request = new FriendshipSearchPhoneRequest()
             {
@@ -36,7 +36,7 @@ namespace Wechaty.Module.PuppetService
             return response?.ContactId;
         }
 
-        public override async Task<string?> FriendshipSearchWeixin(string weixin)
+        public async Task<string?> FriendshipSearchWeixin(string weixin)
         {
             var request = new FriendshipSearchHandleRequest()
             { Weixin = weixin };

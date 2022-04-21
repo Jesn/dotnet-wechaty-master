@@ -15,7 +15,7 @@ namespace Wechaty.Module.PuppetService
         {
             var request = new ContactPayloadRequest()
             { Id = contactId };
-            var response = await grpcClient.ContactPayloadAsync(request);
+            var response = await _grpcClient.ContactPayloadAsync(request);
 
             var payload = new ContactPayload()
             {
@@ -50,7 +50,7 @@ namespace Wechaty.Module.PuppetService
                 Id = friendshipId
             };
 
-            var response = await grpcClient.FriendshipPayloadAsync(request);
+            var response = await _grpcClient.FriendshipPayloadAsync(request);
             if (response != null)
             {
                 payload = new FriendshipPayload()
@@ -80,7 +80,7 @@ namespace Wechaty.Module.PuppetService
             {
                 Id = messageId
             };
-            var response = await grpcClient.MessagePayloadAsync(request);
+            var response = await _grpcClient.MessagePayloadAsync(request);
 
             if (response != null)
             {
@@ -112,7 +112,7 @@ namespace Wechaty.Module.PuppetService
             {
                 Id = roomInvitationId
             };
-            var response = await grpcClient.RoomInvitationPayloadAsync(request);
+            var response = await _grpcClient.RoomInvitationPayloadAsync(request);
 
             if (response == null)
             {
@@ -146,7 +146,7 @@ namespace Wechaty.Module.PuppetService
                 Id = roomId,
                 MemberId = contactId
             };
-            var response = await grpcClient.RoomMemberPayloadAsync(request);
+            var response = await _grpcClient.RoomMemberPayloadAsync(request);
             if (response != null)
             {
                 payload = new RoomMemberPayload()
@@ -175,7 +175,7 @@ namespace Wechaty.Module.PuppetService
                 Id = roomId
             };
 
-            var response = await grpcClient.RoomPayloadAsync(request);
+            var response = await _grpcClient.RoomPayloadAsync(request);
 
 
             if (response != null)

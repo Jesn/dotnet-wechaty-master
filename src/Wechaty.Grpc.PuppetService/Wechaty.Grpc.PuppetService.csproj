@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>Wechaty.Module.PuppetService</AssemblyName>
-    <RootNamespace>Wechaty.Module.PuppetService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Wechaty.Grpc.PuppetService\Wechaty.Grpc.PuppetService.csproj" />
-    <ProjectReference Include="..\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
+    <ProjectReference Include="..\modules\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
+    <ProjectReference Include="..\modules\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
   </ItemGroup>
 
 </Project>

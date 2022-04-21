@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
 using Wechaty.Module.Filebox;
 
-namespace Wechaty.Module.PuppetService
+namespace Wechaty.Grpc.PuppetService.Contact
 {
-    public partial class GrpcPuppet
+    public class ContactService: WechatyPuppetService,IContactService
     {
         #region Contact
 
-        public override async Task<string> ContactAlias(string contactId)
+        public async Task<string> ContactAlias(string contactId)
         {
             var request = new ContactAliasRequest
             {
@@ -25,7 +26,7 @@ namespace Wechaty.Module.PuppetService
         }
 
         // TODO 待确认
-        public override async Task ContactAlias(string contactId, string? alias)
+        public async Task ContactAlias(string contactId, string? alias)
         {
             var request = new ContactAliasRequest();
             if (!string.IsNullOrEmpty(alias))
@@ -38,7 +39,7 @@ namespace Wechaty.Module.PuppetService
 
         }
 
-        public override async Task<FileBox> ContactAvatar(string contactId)
+        public async Task<FileBox> ContactAvatar(string contactId)
         {
             var request = new ContactAvatarRequest
             {
@@ -50,35 +51,36 @@ namespace Wechaty.Module.PuppetService
             return FileBox.FromJson(filebox);
         }
 
-        public override async Task ContactAvatar(string contactId, FileBox file)
+        public async Task ContactAvatar(string contactId, FileBox file)
         {
             var request = new ContactAvatarRequest
             {
                 Id = contactId,
-                FileBox= JsonConvert.SerializeObject(file)
+                FileBox = JsonConvert.SerializeObject(file)
             };
             await _grpcClient.ContactAvatarAsync(request);
         }
 
-        public override async Task<List<string>> ContactList()
+        public async Task<List<string>> ContactList()
         {
             var response = await _grpcClient.ContactListAsync(new ContactListRequest());
             return response?.Ids.ToList();
         }
 
-        public override async Task ContactSelfName(string name)
+        public async Task ContactSelfName(string name)
         {
             var request = new ContactSelfNameRequest();
             await _grpcClient.ContactSelfNameAsync(request);
         }
 
-        public override async Task<string> ContactSelfQRCode()
+        public async Task<string> ContactSelfQRCode()
         {
             var response = await _grpcClient.ContactSelfQRCodeAsync(new ContactSelfQRCodeRequest());
+
             return response?.Qrcode;
         }
 
-        public override async Task ContactSelfSignature(string signature)
+        public async Task ContactSelfSignature(string signature)
         {
             var request = new ContactSelfSignatureRequest
             {

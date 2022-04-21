@@ -1,16 +1,19 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
 using Wechaty.Module.Filebox;
 
-namespace Wechaty.Module.PuppetService
+namespace Wechaty.Grpc.PuppetService.Message
 {
-    public partial class GrpcPuppet
+    public class MessageService:WechatyPuppetService,IMessageService
     {
         #region Message
-        public override async Task<string> MessageContact(string messageId)
+        public async Task<string> MessageContact(string messageId)
         {
             var request = new MessageContactRequest
             {
@@ -21,7 +24,7 @@ namespace Wechaty.Module.PuppetService
             return response.Id;
         }
 
-        public override async Task<FileBox> MessageFile(string messageId)
+        public async Task<FileBox> MessageFile(string messageId)
         {
             var request = new MessageFileRequest
             {
@@ -34,7 +37,7 @@ namespace Wechaty.Module.PuppetService
 
         }
 
-        public override async Task<FileBox> MessageImage(string messageId, Puppet.Schemas.ImageType imageType)
+        public async Task<FileBox> MessageImage(string messageId, Module.Puppet.Schemas.ImageType imageType)
         {
             var request = new MessageImageRequest
             {
@@ -49,7 +52,7 @@ namespace Wechaty.Module.PuppetService
 
 
 
-        public override async Task<byte[]> MessageImageStream(string messageId, Puppet.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
+        public async Task<byte[]> MessageImageStream(string messageId, Module.Puppet.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
         {
             var request = new MessageImageStreamRequest
             {
@@ -67,7 +70,7 @@ namespace Wechaty.Module.PuppetService
             return bytes.ToArray();
         }
 
-        //public override async Task<MiniProgramPayload> MessageMiniProgram(string messageId)
+        //public  async Task<MiniProgramPayload> MessageMiniProgram(string messageId)
         //{
         //    var request = new MessageMiniProgramRequest
         //    {
@@ -79,7 +82,7 @@ namespace Wechaty.Module.PuppetService
         //    return payload;
         //}
 
-        public override async Task<Puppet.Schemas.MiniProgramPayload> MessageMiniProgram(string messageId)
+        public async Task<Module.Puppet.Schemas.MiniProgramPayload> MessageMiniProgram(string messageId)
         {
             var request = new MessageMiniProgramRequest
             {
@@ -87,14 +90,14 @@ namespace Wechaty.Module.PuppetService
             };
             var response = await _grpcClient.MessageMiniProgramAsync(request);
             var str = JsonConvert.SerializeObject(response.MiniProgram);
-            var payload = JsonConvert.DeserializeObject<Puppet.Schemas.MiniProgramPayload>(str);
+            var payload = JsonConvert.DeserializeObject<Module.Puppet.Schemas.MiniProgramPayload>(str);
             return payload;
         }
 
 
 
 
-        public override async Task<bool> MessageRecall(string messageId)
+        public async Task<bool> MessageRecall(string messageId)
         {
             var request = new MessageRecallRequest
             {
@@ -109,7 +112,7 @@ namespace Wechaty.Module.PuppetService
             return response.Success;
         }
 
-        public override async Task<string?> MessageSendContact(string conversationId, string contactId)
+        public async Task<string?> MessageSendContact(string conversationId, string contactId)
         {
             var request = new MessageSendContactRequest()
             {
@@ -121,7 +124,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        public override async Task<string?> MessageSendFile(string conversationId, FileBox file)
+        public async Task<string?> MessageSendFile(string conversationId, FileBox file)
         {
             var request = new MessageSendFileRequest
             {
@@ -133,7 +136,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        //public override async Task<string?> MessageSendMiniProgram(string conversationId, MiniProgramPayload miniProgramPayload)
+        //public  async Task<string?> MessageSendMiniProgram(string conversationId, MiniProgramPayload miniProgramPayload)
         //{
         //    var request = new MessageSendMiniProgramRequest
         //    {
@@ -145,7 +148,7 @@ namespace Wechaty.Module.PuppetService
         //    return response?.Id;
         //}
 
-        public override async Task<string?> MessageSendMiniProgram(string conversationId, Puppet.Schemas.MiniProgramPayload miniProgramPayload)
+        public async Task<string?> MessageSendMiniProgram(string conversationId, Module.Puppet.Schemas.MiniProgramPayload miniProgramPayload)
         {
             var str = JsonConvert.SerializeObject(miniProgramPayload);
 
@@ -159,7 +162,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        public override async Task<string?> MessageSendText(string conversationId, string text, params string[]? mentionIdList)
+        public async Task<string?> MessageSendText(string conversationId, string text, params string[]? mentionIdList)
         {
             var request = new MessageSendTextRequest()
             {
@@ -172,7 +175,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        public override async Task<string?> MessageSendText(string conversationId, string text, IEnumerable<string>? mentionIdList)
+        public async Task<string?> MessageSendText(string conversationId, string text, IEnumerable<string>? mentionIdList)
         {
             var request = new MessageSendTextRequest()
             {
@@ -185,7 +188,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        //public override async Task<string?> MessageSendUrl(string conversationId, UrlLinkPayload urlLinkPayload)
+        //public  async Task<string?> MessageSendUrl(string conversationId, UrlLinkPayload urlLinkPayload)
         //{
         //    var request = new MessageSendUrlRequest()
         //    {
@@ -197,7 +200,7 @@ namespace Wechaty.Module.PuppetService
         //    return response?.Id;
         //}
 
-        public override async Task<string?> MessageSendUrl(string conversationId, Puppet.Schemas.UrlLinkPayload urlLinkPayload)
+        public async Task<string?> MessageSendUrl(string conversationId, Module.Puppet.Schemas.UrlLinkPayload urlLinkPayload)
         {
 
             var str = JsonConvert.SerializeObject(urlLinkPayload);
@@ -211,7 +214,7 @@ namespace Wechaty.Module.PuppetService
             return response?.Id;
         }
 
-        //public override async Task<UrlLinkPayload> MessageUrl(string messageId)
+        //public  async Task<UrlLinkPayload> MessageUrl(string messageId)
         //{
         //    var request = new MessageUrlRequest()
         //    {
@@ -224,7 +227,7 @@ namespace Wechaty.Module.PuppetService
         //}
 
 
-        public override async Task<Puppet.Schemas.UrlLinkPayload> MessageUrl(string messageId)
+        public async Task<Module.Puppet.Schemas.UrlLinkPayload> MessageUrl(string messageId)
         {
             var request = new MessageUrlRequest()
             {
@@ -234,7 +237,7 @@ namespace Wechaty.Module.PuppetService
 
             var str = JsonConvert.SerializeObject(response.UrlLink);
 
-            return JsonConvert.DeserializeObject<Puppet.Schemas.UrlLinkPayload>(str);
+            return JsonConvert.DeserializeObject<Module.Puppet.Schemas.UrlLinkPayload>(str);
 
         }
 

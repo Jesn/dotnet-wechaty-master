@@ -11,6 +11,8 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Wechaty.Grpc.PuppetService;
+using Wechaty.Grpc.PuppetService.Contact;
 using Wechaty.Module.Puppet;
 using Wechaty.Module.Puppet.Schemas;
 using static Wechaty.Puppet;
@@ -20,20 +22,32 @@ namespace Wechaty.Module.PuppetService
     public partial class GrpcPuppet : WechatyPuppet
     {
 
+        public IContactService _contactService;
+
+
+
         protected PuppetOptions options { get; }
         protected ILogger<WechatyPuppet> logger { get; }
+
+        //public GrpcPuppetService grpcPuppetService { get; set; }
 
         public GrpcPuppet(PuppetOptions _options, ILogger<WechatyPuppet> _logger, ILoggerFactory loggerFactory)
             : base(_options, _logger, loggerFactory)
         {
             options = _options;
             logger = _logger;
+            //_contactService = contactService;
+
+            
+
+            //grpcPuppetService = new GrpcPuppetService(grpcClient);
+
         }
 
 
         #region GRPC 连接
         protected const string CHATIE_ENDPOINT = "https://api.chatie.io/v0/hosties/";
-        private PuppetClient grpcClient = null;
+        private PuppetClient _grpcClient = null;
         private GrpcChannel channel = null;
 
         /// <summary>
@@ -85,7 +99,7 @@ namespace Wechaty.Module.PuppetService
         {
             try
             {
-                if (grpcClient != null)
+                if (_grpcClient != null)
                 {
                     throw new Exception("puppetClient had already inited");
                 }
@@ -102,9 +116,6 @@ namespace Wechaty.Module.PuppetService
                     endPoint = "https://" + model.IP + ":" + model.Port;
 
                 }
-
-               
-
 
                 if (endPoint.ToUpper().StartsWith("HTTPS://"))
                 {
@@ -154,7 +165,8 @@ namespace Wechaty.Module.PuppetService
                     });
                 }
 
-                grpcClient = new PuppetClient(channel);
+                _grpcClient = new PuppetClient(channel);
+                //_grpcClient = grpcClient;
             }
             catch (Exception)
             {
@@ -184,12 +196,12 @@ namespace Wechaty.Module.PuppetService
         /// <returns></returns>
         protected async Task StopGrpcClient()
         {
-            if (channel == null || grpcClient == null)
+            if (channel == null || _grpcClient == null)
             {
                 throw new Exception("puppetClient had not initialized");
             }
             await channel.ShutdownAsync();
-            grpcClient = null;
+            _grpcClient = null;
         }
 
         /// <summary>
@@ -199,7 +211,7 @@ namespace Wechaty.Module.PuppetService
         {
             try
             {
-                var eventStream = grpcClient.Event(new EventRequest());
+                var eventStream = _grpcClient.Event(new EventRequest());
 
                 while (await eventStream.ResponseStream.MoveNext())
                 {
@@ -219,7 +231,7 @@ namespace Wechaty.Module.PuppetService
 
                 };
 
-                grpcClient.Stop(st, call);
+                _grpcClient.Stop(st, call);
 
                 var eventResetPayload = new EventResetPayload()
                 {
@@ -340,7 +352,7 @@ namespace Wechaty.Module.PuppetService
 
                 await StartGrpcClient();
 
-                await grpcClient.StartAsync(new StartRequest());
+                await _grpcClient.StartAsync(new StartRequest());
 
                 _ = StartGrpcStreamAsync();
             }
