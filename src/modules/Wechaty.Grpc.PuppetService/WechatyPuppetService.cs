@@ -1,33 +1,50 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using github.wechaty.grpc.puppet;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Newtonsoft.Json;
 using Wechaty.Module.Puppet.Schemas;
 using static Wechaty.Puppet;
+using GrpcClient = Grpc.Net.Client;
 
 namespace Wechaty.Grpc.PuppetService
 {
-    public class WechatyPuppetService
+    public class WechatyPuppetService : IWechatyPuppetService
     {
-        internal PuppetClient _grpcClient;
+        protected PuppetClient _grpcClient;
+        protected GrpcClient.GrpcChannel _channel;
 
         //Gateway 服务发现
         protected const string CHATIE_ENDPOINT = "https://api.chatie.io/v0/hosties/";
+
+
+
+
+
 
         public WechatyPuppetService()
         {
             var option = new PuppetOptions()
             {
-                Endpoint = "https://117.68.179.10:9001",
+                Endpoint = "https://117.68.181.233:9001",
                 Token = "insecure_4ad64522-e86d-4a18-afc9-986a9e2078ef"
             };
-            if (_grpcClient==null)
+            if (_grpcClient == null)
             {
                 _grpcClient = InitGrpcClient(option);
             }
         }
+
+
+
+        public WechatyPuppetService(PuppetOptions option)
+        {
+            //_grpcClient = InitGrpcClient(option);
+        }
+
+
 
 
         public PuppetClient InitGrpcClient(PuppetOptions options)
@@ -59,7 +76,7 @@ namespace Wechaty.Grpc.PuppetService
                 });
                 var channelCredentials = ChannelCredentials.Create(new SslCredentials(), credentials);
 
-                var channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
+                _channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
                 {
                     //HttpClient = httpClient,
                     Credentials = channelCredentials,
@@ -69,15 +86,14 @@ namespace Wechaty.Grpc.PuppetService
                     },
                 });
 
-                var grpcClient = new PuppetClient(channel);
-                return grpcClient;
+
             }
             else
             {
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
 
-                var channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
+                _channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
                 {
                     //HttpClient = httpClient,
                     Credentials = ChannelCredentials.Insecure,
@@ -86,9 +102,14 @@ namespace Wechaty.Grpc.PuppetService
                     //    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                     //},
                 });
-                var grpcClient = new PuppetClient(channel);
-                return grpcClient;
             }
+            if (_channel == null)
+            {
+                throw new Exception("Grpc config error");
+            }
+
+            var grpcClient = new PuppetClient(_channel);
+            return grpcClient;
         }
 
         /// <summary>
@@ -120,6 +141,23 @@ namespace Wechaty.Grpc.PuppetService
             {
                 throw new Exception("获取hostie gateway 对应的主机信息异常");
             }
+        }
+
+        public async Task StartAsync() => await _grpcClient.StartAsync(new StartRequest());
+
+        public AsyncServerStreamingCall<EventResponse> EventStream()
+        {
+            var eventStream = _grpcClient.Event(new EventRequest());
+            return eventStream;
+        }
+
+        public async Task StopGrpcClient()
+        {
+            if (_channel == null || _grpcClient == null)
+            {
+                throw new Exception("puppetClient had not initialized");
+            }
+            await _channel.ShutdownAsync();
         }
     }
 }

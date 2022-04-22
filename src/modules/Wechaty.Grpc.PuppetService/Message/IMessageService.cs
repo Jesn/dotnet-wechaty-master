@@ -8,19 +8,20 @@ namespace Wechaty.Grpc.PuppetService.Message
 {
     public interface IMessageService : IApplicationService
     {
-        Task<string> MessageContact(string messageId);
-        Task<FileBox> MessageFile(string messageId);
-        Task<FileBox> MessageImage(string messageId,ImageType imageType);
-        Task<byte[]> MessageImageStream(string messageId, ImageType imageType, CancellationToken cancellationToken = default);
-        Task<MiniProgramPayload> MessageMiniProgram(string messageId);
-        Task<bool> MessageRecall(string messageId);
-        Task<string?> MessageSendContact(string conversationId, string contactId);
-        Task<string?> MessageSendFile(string conversationId, FileBox file);
-        Task<string?> MessageSendMiniProgram(string conversationId, MiniProgramPayload miniProgramPayload);
-        Task<string?> MessageSendText(string conversationId, string text, params string[]? mentionIdList);
-        Task<string?> MessageSendText(string conversationId, string text, IEnumerable<string>? mentionIdList);
-        Task<string?> MessageSendUrl(string conversationId, UrlLinkPayload urlLinkPayload);
-        Task<UrlLinkPayload> MessageUrl(string messageId);
+        Task<MessagePayload> MessagePayloadAsync(string messageId);
+        Task<string> MessageContactAsync(string messageId);
+        Task<FileBox> MessageFileAsync(string messageId);
+        Task<FileBox> MessageImageAsync(string messageId,ImageType imageType);
+        Task<byte[]> MessageImageStreamAsync(string messageId, ImageType imageType, CancellationToken cancellationToken = default);
+        Task<MiniProgramPayload> MessageMiniProgramAsync(string messageId);
+        Task<bool> MessageRecallAsync(string messageId);
+        Task<string?> MessageSendContactAsync(string conversationId, string contactId);
+        Task<string?> MessageSendFileAsync(string conversationId, FileBox file);
+        Task<string?> MessageSendMiniProgramAsync(string conversationId, MiniProgramPayload miniProgramPayload);
+        Task<string?> MessageSendTextAsync(string conversationId, string text, params string[]? mentionIdList);
+        Task<string?> MessageSendTextAsync(string conversationId, string text, IEnumerable<string>? mentionIdList);
+        Task<string?> MessageSendUrlAsync(string conversationId, UrlLinkPayload urlLinkPayload);
+        Task<UrlLinkPayload> MessageUrlAsync(string messageId);
 
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
 using Wechaty.Module.Filebox;
+using Wechaty.Module.Puppet.Schemas;
 
 namespace Wechaty.Grpc.PuppetService.Contact
 {
@@ -13,7 +14,32 @@ namespace Wechaty.Grpc.PuppetService.Contact
     {
         #region Contact
 
-        public async Task<string> ContactAlias(string contactId)
+        public async Task<ContactPayload> ContactPayloadAsync(string contactId)
+        {
+            var request = new ContactPayloadRequest()
+            { Id = contactId };
+            var response = await _grpcClient.ContactPayloadAsync(request);
+
+            var payload = new ContactPayload()
+            {
+                Id = response.Id,
+                Name = response.Name,
+                Address = response.Address,
+                Alias = response.Alias,
+                Avatar = response.Avatar,
+                City = response.City,
+                Friend = response.Friend,
+                Gender = (Module.Puppet.Schemas.ContactGender)response.Gender,
+                Province = response.Province,
+                Signature = response.Signature,
+                Star = response.Star,
+                Type = (Module.Puppet.Schemas.ContactType)response.Type,
+                Weixin = response.Weixin,
+            };
+            return payload;
+        }
+
+        public async Task<string> ContactAliasAsync(string contactId)
         {
             var request = new ContactAliasRequest
             {
@@ -26,7 +52,7 @@ namespace Wechaty.Grpc.PuppetService.Contact
         }
 
         // TODO 待确认
-        public async Task ContactAlias(string contactId, string? alias)
+        public async Task ContactAliasAsync(string contactId, string? alias)
         {
             var request = new ContactAliasRequest();
             if (!string.IsNullOrEmpty(alias))
@@ -39,11 +65,11 @@ namespace Wechaty.Grpc.PuppetService.Contact
 
         }
 
-        public async Task<FileBox> ContactAvatar(string contactId)
+        public async Task<FileBox> ContactAvatarAsync(string contactId)
         {
             var request = new ContactAvatarRequest
             {
-                Id = contactId
+                Id = contactId,
             };
 
             var response = await _grpcClient.ContactAvatarAsync(request);
@@ -51,7 +77,7 @@ namespace Wechaty.Grpc.PuppetService.Contact
             return FileBox.FromJson(filebox);
         }
 
-        public async Task ContactAvatar(string contactId, FileBox file)
+        public async Task ContactAvatarAsync(string contactId, FileBox file)
         {
             var request = new ContactAvatarRequest
             {
@@ -61,26 +87,29 @@ namespace Wechaty.Grpc.PuppetService.Contact
             await _grpcClient.ContactAvatarAsync(request);
         }
 
-        public async Task<List<string>> ContactList()
+        public async Task<List<string>> ContactListAsync()
         {
             var response = await _grpcClient.ContactListAsync(new ContactListRequest());
             return response?.Ids.ToList();
         }
 
-        public async Task ContactSelfName(string name)
+      
+
+        public async Task ContactSelfNameAsync(string name)
         {
             var request = new ContactSelfNameRequest();
+            request.Name = name;
             await _grpcClient.ContactSelfNameAsync(request);
         }
 
-        public async Task<string> ContactSelfQRCode()
+        public async Task<string> ContactSelfQRCodeAsync()
         {
             var response = await _grpcClient.ContactSelfQRCodeAsync(new ContactSelfQRCodeRequest());
 
             return response?.Qrcode;
         }
 
-        public async Task ContactSelfSignature(string signature)
+        public async Task ContactSelfSignatureAsync(string signature)
         {
             var request = new ContactSelfSignatureRequest
             {

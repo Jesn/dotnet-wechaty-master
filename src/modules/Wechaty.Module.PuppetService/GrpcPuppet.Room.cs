@@ -12,151 +12,83 @@ namespace Wechaty.Module.PuppetService
 
         public override async Task RoomAdd(string roomId, string contactId)
         {
-            var request = new RoomAddRequest()
-            {
-                ContactId = contactId,
-                Id = roomId
-            };
-            await _grpcClient.RoomAddAsync(request);
+            await _roomService.RoomAddAsync(roomId, contactId);
         }
 
         public override async Task<string> RoomAnnounce(string roomId)
         {
-            var request = new RoomAnnounceRequest
-            {
-                Id = roomId
-            };
 
-            var response = await _grpcClient.RoomAnnounceAsync(request);
-            return response?.Text;
+            var response = await _roomService.RoomAnnounceAsync(roomId);
+            return response;
         }
 
         public override async Task RoomAnnounce(string roomId, string text)
         {
-            var request = new RoomAnnounceRequest
-            {
-                Id = roomId,
-                Text = text
-            };
-
-            await _grpcClient.RoomAnnounceAsync(request);
-
+            await _roomService.RoomAnnounceAsync(roomId, text);
         }
 
         public override async Task<FileBox> RoomAvatar(string roomId)
         {
-            var request = new RoomAvatarRequest()
-            { Id = roomId };
-
-            var response = await _grpcClient.RoomAvatarAsync(request);
-            
-            return FileBox.FromJson(response.FileBox);
+            var response = await _roomService.RoomAvatarAsync(roomId);
+            return response;
         }
 
         // TODO 可以合并为一个接口
         public override async Task<string> RoomCreate(IEnumerable<string> contactIdList, string? topic)
         {
-            var request = new RoomCreateRequest();
-
-            request.ContactIds.AddRange(contactIdList);
-            request.Topic = topic;
-
-            var response = await _grpcClient.RoomCreateAsync(request);
-            return response?.Id;
+            var response = await _roomService.RoomCreateAsync(contactIdList, topic);
+            return response;
         }
 
         public override async Task<string> RoomCreate(string[] contactIdList, string? topic)
         {
-            var request = new RoomCreateRequest();
-
-            request.ContactIds.AddRange(contactIdList);
-            if (topic != "")
-            {
-                request.Topic = topic;
-            }
-
-            var response = await _grpcClient.RoomCreateAsync(request);
-            return response?.Id;
+            var response = await _roomService.RoomCreateAsync(contactIdList, topic);
+            return response;
         }
 
         public override async Task RoomDel(string roomId, string contactId)
         {
-            var request = new RoomDelRequest()
-            {
-                ContactId = contactId,
-                Id = roomId
-            };
-            await _grpcClient.RoomDelAsync(request);
+            await _roomService.RoomDelAsync(roomId, contactId);
         }
 
         public override async Task RoomInvitationAccept(string roomInvitationId)
         {
-            var request = new RoomInvitationAcceptRequest()
-            {
-                Id = roomInvitationId
-            };
-            await _grpcClient.RoomInvitationAcceptAsync(request);
+            await _roomService.RoomInvitationAcceptAsync(roomInvitationId);
         }
 
         public override async Task<IReadOnlyList<string>> RoomList()
         {
-            var response = await _grpcClient.RoomListAsync(new RoomListRequest());
-            return response?.Ids.ToList();
+            var response = await _roomService.RoomListAsync();
+            return response;
         }
 
         public override async Task<string[]> RoomMemberList(string roomId)
         {
-            var request = new RoomMemberListRequest()
-            {
-                Id = roomId
-            };
-
-            var response = await _grpcClient.RoomMemberListAsync(request);
-            return response?.MemberIds.ToArray();
+            var response = await _roomService.RoomMemberListAsync(roomId);
+            return response;
         }
 
         public override async Task<string> RoomQRCode(string roomId)
         {
-            var request = new RoomQRCodeRequest()
-            {
-                Id = roomId
-            };
-            var response = await _grpcClient.RoomQRCodeAsync(request);
-            return response?.Qrcode;
+            var response = await _roomService.RoomQRCodeAsync(roomId);
+            return response;
         }
 
         public override async Task RoomQuit(string roomId)
         {
-            var request = new RoomQuitRequest()
-            {
-                Id = roomId
-            };
-            await _grpcClient.RoomQuitAsync(request);
+            await _roomService.RoomQuitAsync(roomId);
         }
 
         public override async Task<string> RoomTopic(string roomId)
         {
-            var request = new RoomTopicRequest()
-            {
-                Id = roomId
-            };
-            var response = await _grpcClient.RoomTopicAsync(request);
-            return response?.Topic;
+            var response = await _roomService.RoomTopicAsync(roomId);
+            return response;
         }
 
         // TODO  待确定
         public override async Task RoomTopic(string roomId, string topic)
         {
-            var request = new RoomTopicRequest()
-            {
-                Id = roomId
-            };
-            if (!string.IsNullOrEmpty(topic))
-            {
-                request.Topic = topic;
-            }
-
-            var response = await _grpcClient.RoomTopicAsync(request);
+            await _roomService.RoomTopicAsync(roomId, topic);
             //return response?.Topic;
         }
         #endregion

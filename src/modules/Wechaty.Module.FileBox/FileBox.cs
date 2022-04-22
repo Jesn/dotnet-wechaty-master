@@ -17,14 +17,14 @@ namespace Wechaty.Module.Filebox
         private static readonly IReadOnlyDictionary<string, object> EmptyMetadata
             = new Dictionary<string, object>();
 
-        public FileBoxType BoxType { get; set; }
+        public FileBoxType Type { get; set; }
         public Optional<string> MimeType { get; set; }
         public string Name { get; set; }
 
         private Dictionary<string, object>? _metadata;
 
         private readonly string? _base64;
-        private readonly string? _remoteUrl;
+        private readonly string? _url;
         private readonly string? _qrCode;
 
         private readonly byte[]? _buffer;
@@ -54,7 +54,7 @@ namespace Wechaty.Module.Filebox
         public FileBox(FileBoxOptions options)
         {
             Name = Path.GetFileName(options.Name);
-            BoxType = options.Type;
+            Type = options.Type;
             var mime = MimeUtility.GetMimeMapping(Name);
             MimeType = string.IsNullOrWhiteSpace(mime) ? default : new Optional<string>(mime);
             switch (options.Type)
@@ -81,7 +81,7 @@ namespace Wechaty.Module.Filebox
                     {
                         throw new ArgumentException("no url");
                     }
-                    _remoteUrl = urlOptions.Url;
+                    _url = urlOptions.Url;
                     if (urlOptions.Headers != null)
                     {
                         _headers = urlOptions.Headers;
@@ -119,7 +119,7 @@ namespace Wechaty.Module.Filebox
 
         public async Task Ready()
         {
-            if (BoxType == FileBoxType.Url)
+            if (Type == FileBoxType.Url)
             {
                 await SyncRemoteName();
             }
@@ -127,15 +127,15 @@ namespace Wechaty.Module.Filebox
 
         protected async Task SyncRemoteName()
         {
-            if (BoxType != FileBoxType.Url)
+            if (Type != FileBoxType.Url)
             {
                 throw new InvalidOperationException("type is not Remote");
             }
-            if (string.IsNullOrWhiteSpace(_remoteUrl))
+            if (string.IsNullOrWhiteSpace(_url))
             {
                 throw new InvalidOperationException("no url");
             }
-            var headers = await Http.HeadContentHeaders(_remoteUrl);
+            var headers = await Http.HeadContentHeaders(_url);
             if (!string.IsNullOrWhiteSpace(headers.ContentDisposition.FileName))
             {
                 Name = headers.ContentDisposition.FileName;
@@ -147,22 +147,22 @@ namespace Wechaty.Module.Filebox
             MimeType = headers.ContentType?.MediaType ?? MimeUtility.GetMimeMapping(Name) ?? "";
         }
 
-        public override string ToString() => string.Concat("FileBox#", BoxType.ToString(), "<", Name, ">");
+        public override string ToString() => string.Concat("FileBox#", Type.ToString(), "<", Name, ">");
 
         public FileBoxJsonObject ToJson()
         {
             FileBoxJsonObject common;
-            switch (BoxType)
+            switch (Type)
             {
                 case FileBoxType.Url:
-                    if (string.IsNullOrWhiteSpace(_remoteUrl))
+                    if (string.IsNullOrWhiteSpace(_url))
                     {
                         throw new InvalidOperationException("no url");
                     }
                     common = new FileBoxJsonObjectUrl
                     {
                         Headers = _headers,
-                        RemoteUrl = _remoteUrl
+                        RemoteUrl = _url
                     };
                     break;
                 case FileBoxType.QRCode:
@@ -203,7 +203,7 @@ namespace Wechaty.Module.Filebox
 
         public async Task<Stream> ToStream()
         {
-            switch (BoxType)
+            switch (Type)
             {
                 case FileBoxType.Buffer:
                     if (_buffer == null)
@@ -218,11 +218,11 @@ namespace Wechaty.Module.Filebox
                     }
                     return File.OpenRead(_localPath);
                 case FileBoxType.Url:
-                    if (string.IsNullOrWhiteSpace(_remoteUrl))
+                    if (string.IsNullOrWhiteSpace(_url))
                     {
                         throw new InvalidOperationException("no url");
                     }
-                    return await Http.GetStream(_remoteUrl, _headers);
+                    return await Http.GetStream(_url, _headers);
                 case FileBoxType.Stream:
                     if (_stream == null)
                     {
@@ -247,13 +247,13 @@ namespace Wechaty.Module.Filebox
                     return new MemoryStream(Convert.FromBase64String(_base64));
                 case FileBoxType.Unknown:
                 default:
-                    throw new InvalidOperationException("not supported FileBoxType: " + BoxType);
+                    throw new InvalidOperationException("not supported FileBoxType: " + Type);
             }
         }
 
         public async Task ToFile(string? filePath, bool overwrite = false)
         {
-            if (BoxType == FileBoxType.Url)
+            if (Type == FileBoxType.Url)
             {
                 if (string.IsNullOrWhiteSpace(MimeType.Value) || string.IsNullOrWhiteSpace(Name))
                 {
@@ -275,7 +275,7 @@ namespace Wechaty.Module.Filebox
 
         public async Task<string> ToBase64()
         {
-            if (BoxType == FileBoxType.Base64)
+            if (Type == FileBoxType.Base64)
             {
                 if (string.IsNullOrEmpty(_base64))
                 {
@@ -290,7 +290,7 @@ namespace Wechaty.Module.Filebox
 
         public async Task<byte[]> ToBuffer()
         {
-            if (BoxType == FileBoxType.Buffer)
+            if (Type == FileBoxType.Buffer)
             {
                 if (_buffer == null)
                 {
@@ -306,7 +306,7 @@ namespace Wechaty.Module.Filebox
 
         public async Task<string> ToQRCode()
         {
-            if (BoxType == FileBoxType.QRCode)
+            if (Type == FileBoxType.QRCode)
             {
                 if (string.IsNullOrEmpty(_qrCode))
                 {
@@ -443,14 +443,14 @@ namespace Wechaty.Module.Filebox
             }
 
             FileBox fileBox;
-            switch ((int)jsonObj["boxType"])
+            switch ((int)jsonObj["type"])
             {
                 case (int)FileBoxType.Base64:
                     fileBox = FromBase64(jsonObj["base64"].ToString(),jsonObj["name"].ToString());
                     break;
                 case (int)FileBoxType.Url:
                     //fileBox = FromUrl(((FileBoxJsonObjectUrl)obj).RemoteUrl, obj.Name);
-                    fileBox = FromUrl(jsonObj["remoteUrl"].ToString(), jsonObj["name"].ToString());
+                    fileBox = FromUrl(jsonObj["url"].ToString(), jsonObj["name"].ToString());
                     break;
                 case (int)FileBoxType.QRCode:
                     fileBox = FromQRCode(jsonObj["qrCode"].ToString());

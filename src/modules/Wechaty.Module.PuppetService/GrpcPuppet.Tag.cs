@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using github.wechaty.grpc.puppet;
 
 namespace Wechaty.Module.PuppetService
 {
@@ -12,49 +8,29 @@ namespace Wechaty.Module.PuppetService
         #region Tag
         public override async Task TagContactAdd(string tagId, string contactId)
         {
-            var request = new TagContactAddRequest()
-            {
-                Id = tagId,
-                ContactId = contactId
-            };
-            await _grpcClient.TagContactAddAsync(request);
+            await _tagService.TagContactAddAsync(tagId,contactId);
         }
 
         public override async Task TagContactDelete(string tagId)
         {
-            var request = new TagContactDeleteRequest()
-            {
-                Id = tagId
-            };
-
-            await _grpcClient.TagContactDeleteAsync(request);
+            await _tagService.TagContactDeleteAsync(tagId);
         }
 
         public override async Task<List<string>> TagContactList(string contactId)
         {
-            var request = new TagContactListRequest();
-
-            var response = await _grpcClient.TagContactListAsync(request);
-            return response.Ids.ToList();
+            var response = await _tagService.TagContactListAsync(contactId);
+            return response;
         }
 
         public override async Task<List<string>> TagContactList()
         {
-            var request = new TagContactListRequest();
-
-            var response = await _grpcClient.TagContactListAsync(request);
-            return response.Ids.ToList();
+            var response = await _tagService.TagContactListAsync();
+            return response;
         }
 
         public override async Task TagContactRemove(string tagId, string contactId)
         {
-            var request = new TagContactRemoveRequest()
-            {
-                Id = tagId,
-                ContactId = contactId
-            };
-
-            await _grpcClient.TagContactRemoveAsync(request);
+            await _tagService.TagContactRemoveAsync(tagId,contactId);
         }
         #endregion
     }

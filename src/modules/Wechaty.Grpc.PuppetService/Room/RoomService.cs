@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Wechaty.Module.Filebox;
+using Wechaty.Module.Puppet.Schemas;
 
 namespace Wechaty.Grpc.PuppetService.Room
 {
@@ -12,7 +13,34 @@ namespace Wechaty.Grpc.PuppetService.Room
     {
         #region Room
 
-        public async Task RoomAdd(string roomId, string contactId)
+        public async Task<RoomPayload> RoomPayloadAsync(string roomId)
+        {
+            var roomPayload = new RoomPayload();
+
+            var request = new RoomPayloadRequest()
+            {
+                Id = roomId
+            };
+
+            var response = await _grpcClient.RoomPayloadAsync(request);
+
+
+            if (response != null)
+            {
+                roomPayload = new RoomPayload
+                {
+                    AdminIdList = response.AdminIds.ToList(),
+                    Avatar = response.Avatar,
+                    Id = response.Id,
+                    MemberIdList = response.MemberIds.ToList(),
+                    OwnerId = response.OwnerId,
+                    Topic = response.Topic
+                };
+            }
+            return roomPayload;
+        }
+
+        public async Task RoomAddAsync(string roomId, string contactId)
         {
             var request = new RoomAddRequest()
             {
@@ -22,7 +50,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             await _grpcClient.RoomAddAsync(request);
         }
 
-        public async Task<string> RoomAnnounce(string roomId)
+        public async Task<string> RoomAnnounceAsync(string roomId)
         {
             var request = new RoomAnnounceRequest
             {
@@ -34,7 +62,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             return response?.Text;
         }
 
-        public async Task RoomAnnounce(string roomId, string text)
+        public async Task RoomAnnounceAsync(string roomId, string text)
         {
             var request = new RoomAnnounceRequest
             {
@@ -46,7 +74,7 @@ namespace Wechaty.Grpc.PuppetService.Room
 
         }
 
-        public async Task<FileBox> RoomAvatar(string roomId)
+        public async Task<FileBox> RoomAvatarAsync(string roomId)
         {
             var request = new RoomAvatarRequest()
             { Id = roomId };
@@ -57,7 +85,7 @@ namespace Wechaty.Grpc.PuppetService.Room
         }
 
         // TODO 可以合并为一个接口
-        public async Task<string> RoomCreate(IEnumerable<string> contactIdList, string? topic)
+        public async Task<string> RoomCreateAsync(IEnumerable<string> contactIdList, string? topic)
         {
             var request = new RoomCreateRequest();
 
@@ -82,7 +110,7 @@ namespace Wechaty.Grpc.PuppetService.Room
         //    return response?.Id;
         //}
 
-        public async Task RoomDel(string roomId, string contactId)
+        public async Task RoomDelAsync(string roomId, string contactId)
         {
             var request = new RoomDelRequest()
             {
@@ -92,7 +120,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             await _grpcClient.RoomDelAsync(request);
         }
 
-        public async Task RoomInvitationAccept(string roomInvitationId)
+        public async Task RoomInvitationAcceptAsync(string roomInvitationId)
         {
             var request = new RoomInvitationAcceptRequest()
             {
@@ -101,13 +129,40 @@ namespace Wechaty.Grpc.PuppetService.Room
             await _grpcClient.RoomInvitationAcceptAsync(request);
         }
 
-        public async Task<IReadOnlyList<string>> RoomList()
+        public async Task<RoomInvitationPayload> RoomInvitationPayloadAsync(string roomInvitationId)
+        {
+            var payload = new RoomInvitationPayload();
+            var request = new RoomInvitationPayloadRequest()
+            {
+                Id = roomInvitationId
+            };
+            var response = await _grpcClient.RoomInvitationPayloadAsync(request);
+
+            if (response == null)
+            {
+                payload = new RoomInvitationPayload()
+                {
+                    Avatar = response.Avatar,
+                    Id = response.Id,
+                    Invitation = response.Invitation,
+                    InviterId = response.InviterId,
+                    MemberCount = (int)response.MemberCount,
+                    MemberIdList = response.MemberIds.ToList(),
+                    ReceiverId = response.ReceiverId,
+                    Timestamp = (long)response.TimestampUint64Deprecated,
+                    Topic = response.Topic
+                };
+            }
+            return payload;
+        }
+
+        public async Task<IReadOnlyList<string>> RoomListAsync()
         {
             var response = await _grpcClient.RoomListAsync(new RoomListRequest());
             return response?.Ids.ToList();
         }
 
-        public async Task<string[]> RoomMemberList(string roomId)
+        public async Task<string[]> RoomMemberListAsync(string roomId)
         {
             var request = new RoomMemberListRequest()
             {
@@ -118,7 +173,31 @@ namespace Wechaty.Grpc.PuppetService.Room
             return response?.MemberIds.ToArray();
         }
 
-        public async Task<string> RoomQRCode(string roomId)
+        public async Task<RoomMemberPayload> RoomMemberPayloadAsync(string roomId, string contactId)
+        {
+            var payload = new RoomMemberPayload();
+
+            var request = new RoomMemberPayloadRequest()
+            {
+                Id = roomId,
+                MemberId = contactId
+            };
+            var response = await _grpcClient.RoomMemberPayloadAsync(request);
+            if (response != null)
+            {
+                payload = new RoomMemberPayload()
+                {
+                    Avatar = response.Avatar,
+                    Id = response.Id,
+                    InviterId = response.InviterId,
+                    Name = response.Name,
+                    RoomAlias = response.RoomAlias
+                };
+            }
+            return payload;
+        }
+
+        public async Task<string> RoomQRCodeAsync(string roomId)
         {
             var request = new RoomQRCodeRequest()
             {
@@ -128,7 +207,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             return response?.Qrcode;
         }
 
-        public async Task RoomQuit(string roomId)
+        public async Task RoomQuitAsync(string roomId)
         {
             var request = new RoomQuitRequest()
             {
@@ -137,7 +216,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             await _grpcClient.RoomQuitAsync(request);
         }
 
-        public async Task<string> RoomTopic(string roomId)
+        public async Task<string> RoomTopicAsync(string roomId)
         {
             var request = new RoomTopicRequest()
             {
@@ -148,7 +227,7 @@ namespace Wechaty.Grpc.PuppetService.Room
         }
 
         // TODO  待确定
-        public async Task RoomTopic(string roomId, string topic)
+        public async Task RoomTopicAsync(string roomId, string topic)
         {
             var request = new RoomTopicRequest()
             {

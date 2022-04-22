@@ -18,14 +18,14 @@ namespace wechaty_grpc_webapi.Controllers
             {
                 return BadRequest("请求参数异常");
             }
-            await _tagService.TagContactAdd(tagId, contactId);
+            await _tagService.TagContactAddAsync(tagId, contactId);
             return Ok();
         }
 
         [HttpDelete("{tagId}")]
         public async Task<IActionResult> TagContactDelete(string tagId)
         {
-            await _tagService.TagContactDelete(tagId);
+            await _tagService.TagContactDeleteAsync(tagId);
             return NoContent();
         }
 
@@ -33,14 +33,14 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpGet("{contactId}")]
         public async Task<ActionResult<List<string>>> TagContactList(string contactId)
         {
-            var response = await _tagService.TagContactList(contactId);
+            var response = await _tagService.TagContactListAsync(contactId);
             return response;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<string>>> TagContactList()
         {
-            var response = await _tagService.TagContactList();
+            var response = await _tagService.TagContactListAsync();
             return response;
         }
 
@@ -48,7 +48,7 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpPut]
         public async Task<ActionResult> TagContactRemove(string tagId, string contactId)
         {
-            await _tagService.TagContactRemove(tagId, contactId);
+            await _tagService.TagContactRemoveAsync(tagId, contactId);
             return NoContent();
         }
     }

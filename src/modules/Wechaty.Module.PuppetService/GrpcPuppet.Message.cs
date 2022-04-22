@@ -12,59 +12,29 @@ namespace Wechaty.Module.PuppetService
         #region Message
         public override async Task<string> MessageContact(string messageId)
         {
-            var request = new MessageContactRequest
-            {
-                Id = messageId
-            };
-
-            var response = await _grpcClient.MessageContactAsync(request);
-            return response.Id;
+            var response = await _messageService.MessageContactAsync(messageId);
+            return response;
         }
 
         public override async Task<FileBox> MessageFile(string messageId)
         {
-            var request = new MessageFileRequest
-            {
-                Id = messageId
-            };
-
-            var response = await _grpcClient.MessageFileAsync(request);
-            var filebox = response.FileBox;
-            return FileBox.FromJson(filebox);
+            var response = await _messageService.MessageFileAsync(messageId);
+            return response;
 
         }
 
         public override async Task<FileBox> MessageImage(string messageId, Puppet.Schemas.ImageType imageType)
         {
-            var request = new MessageImageRequest
-            {
-                Id = messageId,
-                Type = (github.wechaty.grpc.puppet.ImageType)imageType
-            };
-
-            var response = await _grpcClient.MessageImageAsync(request);
-            var fileBox = response.FileBox;
-            return FileBox.FromJson(fileBox);
+            var response = await _messageService.MessageImageAsync(messageId, imageType);
+            return response;
         }
 
 
 
         public override async Task<byte[]> MessageImageStream(string messageId, Puppet.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
         {
-            var request = new MessageImageStreamRequest
-            {
-                Id = messageId,
-                Type = (github.wechaty.grpc.puppet.ImageType)imageType
-            };
-
-            var response = _grpcClient.MessageImageStream(request);
-            var bytes = new List<byte>();
-            while (await response.ResponseStream.MoveNext(cancellationToken))
-            {
-                bytes.AddRange(response.ResponseStream.Current.FileBoxChunk.Data.ToByteArray());
-            }
-
-            return bytes.ToArray();
+            var response = await _messageService.MessageImageStreamAsync(messageId, imageType, cancellationToken);
+            return response;
         }
 
         //public override async Task<MiniProgramPayload> MessageMiniProgram(string messageId)
@@ -74,63 +44,33 @@ namespace Wechaty.Module.PuppetService
         //        Id = messageId
         //    };
 
-        //    var response = await _grpcClient.MessageMiniProgramAsync(request);
+        //    var response = await _messageService.MessageMiniProgramAsync(request);
         //    var payload = response.MiniProgram;
         //    return payload;
         //}
 
         public override async Task<Puppet.Schemas.MiniProgramPayload> MessageMiniProgram(string messageId)
         {
-            var request = new MessageMiniProgramRequest
-            {
-                Id = messageId
-            };
-            var response = await _grpcClient.MessageMiniProgramAsync(request);
-            var str = JsonConvert.SerializeObject(response.MiniProgram);
-            var payload = JsonConvert.DeserializeObject<Puppet.Schemas.MiniProgramPayload>(str);
-            return payload;
+            var response = await _messageService.MessageMiniProgramAsync(messageId);
+            return response;
         }
-
-
-
 
         public override async Task<bool> MessageRecall(string messageId)
         {
-            var request = new MessageRecallRequest
-            {
-                Id = messageId
-            };
-
-            var response = await _grpcClient.MessageRecallAsync(request);
-            if (response == null)
-            {
-                return false;
-            }
-            return response.Success;
+            var response = await _messageService.MessageRecallAsync(messageId);
+            return response;
         }
 
         public override async Task<string?> MessageSendContact(string conversationId, string contactId)
         {
-            var request = new MessageSendContactRequest()
-            {
-                ConversationId = conversationId,
-                ContactId = contactId
-            };
-
-            var response = await _grpcClient.MessageSendContactAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendContactAsync(conversationId, contactId);
+            return response;
         }
 
         public override async Task<string?> MessageSendFile(string conversationId, FileBox file)
         {
-            var request = new MessageSendFileRequest
-            {
-                ConversationId = conversationId,
-                FileBox = JsonConvert.SerializeObject(file.ToJson())
-            };
-
-            var response = await _grpcClient.MessageSendFileAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendFileAsync(conversationId, file);
+            return response;
         }
 
         //public override async Task<string?> MessageSendMiniProgram(string conversationId, MiniProgramPayload miniProgramPayload)
@@ -141,48 +81,26 @@ namespace Wechaty.Module.PuppetService
         //        MiniProgram = miniProgramPayload
         //    };
 
-        //    var response = await _grpcClient.MessageSendMiniProgramAsync(request);
+        //    var response = await _messageService.MessageSendMiniProgramAsync(request);
         //    return response?.Id;
         //}
 
         public override async Task<string?> MessageSendMiniProgram(string conversationId, Puppet.Schemas.MiniProgramPayload miniProgramPayload)
         {
-            var str = JsonConvert.SerializeObject(miniProgramPayload);
-
-            var request = new MessageSendMiniProgramRequest
-            {
-                ConversationId = conversationId,
-                MiniProgram = JsonConvert.DeserializeObject<MiniProgramPayload>(str)
-            };
-
-            var response = await _grpcClient.MessageSendMiniProgramAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendMiniProgramAsync(conversationId, miniProgramPayload);
+            return response;
         }
 
         public override async Task<string?> MessageSendText(string conversationId, string text, params string[]? mentionIdList)
         {
-            var request = new MessageSendTextRequest()
-            {
-                ConversationId = conversationId,
-                Text = text,
-                //MentonalIds = mentonalIds
-            };
-
-            var response = await _grpcClient.MessageSendTextAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendTextAsync(conversationId,text,mentionIdList);
+            return response;
         }
 
         public override async Task<string?> MessageSendText(string conversationId, string text, IEnumerable<string>? mentionIdList)
         {
-            var request = new MessageSendTextRequest()
-            {
-                ConversationId = conversationId,
-                Text = text,
-                //MentonalIds = mentonalIds
-            };
-
-            var response = await _grpcClient.MessageSendTextAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendTextAsync(conversationId,text,mentionIdList);
+            return response;
         }
 
         //public override async Task<string?> MessageSendUrl(string conversationId, UrlLinkPayload urlLinkPayload)
@@ -193,22 +111,14 @@ namespace Wechaty.Module.PuppetService
         //        UrlLink = JsonConvert.SerializeObject(urlLinkPayload)
         //    };
 
-        //    var response = await _grpcClient.MessageSendUrlAsync(request);
+        //    var response = await _messageService.MessageSendUrlAsync(request);
         //    return response?.Id;
         //}
 
         public override async Task<string?> MessageSendUrl(string conversationId, Puppet.Schemas.UrlLinkPayload urlLinkPayload)
         {
-
-            var str = JsonConvert.SerializeObject(urlLinkPayload);
-            var request = new MessageSendUrlRequest()
-            {
-                ConversationId = conversationId,
-                UrlLink = JsonConvert.DeserializeObject<UrlLinkPayload>(str)
-            };
-
-            var response = await _grpcClient.MessageSendUrlAsync(request);
-            return response?.Id;
+            var response = await _messageService.MessageSendUrlAsync(conversationId,urlLinkPayload);
+            return response;
         }
 
         //public override async Task<UrlLinkPayload> MessageUrl(string messageId)
@@ -218,7 +128,7 @@ namespace Wechaty.Module.PuppetService
         //        Id = messageId
         //    };
 
-        //    var response = await _grpcClient.MessageUrlAsync(request);
+        //    var response = await _messageService.MessageUrlAsync(request);
         //    var payload = JsonConvert.DeserializeObject<UrlLinkPayload>(response.UrlLink);
         //    return payload;
         //}
@@ -226,16 +136,8 @@ namespace Wechaty.Module.PuppetService
 
         public override async Task<Puppet.Schemas.UrlLinkPayload> MessageUrl(string messageId)
         {
-            var request = new MessageUrlRequest()
-            {
-                Id = messageId
-            };
-            var response = await _grpcClient.MessageUrlAsync(request);
-
-            var str = JsonConvert.SerializeObject(response.UrlLink);
-
-            return JsonConvert.DeserializeObject<Puppet.Schemas.UrlLinkPayload>(str);
-
+            var response = await _messageService.MessageUrlAsync(messageId);
+            return response;
         }
 
         #endregion

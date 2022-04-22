@@ -16,63 +16,63 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpGet]
         public async Task<ActionResult> MessageContact(string messageId)
         {
-            var response = await _messageService.MessageContact(messageId);
+            var response = await _messageService.MessageContactAsync(messageId);
             return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult> MessageFile(string messageId)
         {
-            var response = await _messageService.MessageFile(messageId);
+            var response = await _messageService.MessageFileAsync(messageId);
             return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult> MessageImage(string messageId, ImageType imageType)
         {
-            var response = await _messageService.MessageImage(messageId, imageType);
+            var response = await _messageService.MessageImageAsync(messageId, imageType);
             return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult> MessageImageStream(string messageId, ImageType imageType, CancellationToken cancellationToken = default)
         {
-            var response = await _messageService.MessageImageStream(messageId, imageType, cancellationToken);
+            var response = await _messageService.MessageImageStreamAsync(messageId, imageType, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult> MessageMiniProgram(string messageId)
         {
-            var response = await _messageService.MessageMiniProgram(messageId);
+            var response = await _messageService.MessageMiniProgramAsync(messageId);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult> MessageRecall(string messageId)
         {
-            var response = await _messageService.MessageRecall(messageId);
+            var response = await _messageService.MessageRecallAsync(messageId);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult> MessageSendContact(string conversationId, string contactId)
         {
-            var response = await _messageService.MessageSendContact(conversationId, contactId);
+            var response = await _messageService.MessageSendContactAsync(conversationId, contactId);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult> MessageSendFile(string conversationId, FileBox file)
         {
-            var response = await _messageService.MessageSendFile(conversationId, file);
+            var response = await _messageService.MessageSendFileAsync(conversationId, file);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult> MessageSendMiniProgram(string conversationId, MiniProgramPayload miniProgramPayload)
         {
-            var response = await _messageService.MessageSendMiniProgram(conversationId, miniProgramPayload);
+            var response = await _messageService.MessageSendMiniProgramAsync(conversationId, miniProgramPayload);
             return Ok(response);
         }
 
@@ -86,14 +86,14 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpPut]
         public async Task<ActionResult> MessageSendText(string conversationId, string text, IEnumerable<string>? mentionIdList)
         {
-            var response = await _messageService.MessageSendText(conversationId, text, mentionIdList);
+            var response = await _messageService.MessageSendTextAsync(conversationId, text, mentionIdList);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult> MessageSendUrl(string conversationId, UrlLinkPayload urlLinkPayload)
         {
-            var response = await _messageService.MessageSendUrl(conversationId, urlLinkPayload);
+            var response = await _messageService.MessageSendUrlAsync(conversationId, urlLinkPayload);
             return Ok(response);
         }
 
@@ -101,7 +101,7 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpPut]
         public async Task<ActionResult> MessageUrl(string messageId)
         {
-            var response = await _messageService.MessageUrl(messageId);
+            var response = await _messageService.MessageUrlAsync(messageId);
             return Ok(response);
         }
     }

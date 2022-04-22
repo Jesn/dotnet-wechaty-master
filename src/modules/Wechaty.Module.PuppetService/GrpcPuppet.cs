@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using github.wechaty.grpc.puppet;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -13,6 +14,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Wechaty.Grpc.PuppetService;
 using Wechaty.Grpc.PuppetService.Contact;
+using Wechaty.Grpc.PuppetService.FriendShip;
+using Wechaty.Grpc.PuppetService.Message;
+using Wechaty.Grpc.PuppetService.Room;
+using Wechaty.Grpc.PuppetService.Tag;
 using Wechaty.Module.Puppet;
 using Wechaty.Module.Puppet.Schemas;
 using static Wechaty.Puppet;
@@ -22,33 +27,53 @@ namespace Wechaty.Module.PuppetService
     public partial class GrpcPuppet : WechatyPuppet
     {
 
-        public IContactService _contactService;
-
-
-
-        protected PuppetOptions options { get; }
+        public PuppetOptions options { get; }
         protected ILogger<WechatyPuppet> logger { get; }
 
-        //public GrpcPuppetService grpcPuppetService { get; set; }
+
+        protected IWechatyPuppetService _wechatyPuppetService;
+        protected IContactService _contactService;
+        protected IFriendShipService _friendShipService;
+        protected IMessageService _messageService;
+        protected IRoomService _roomService;
+        protected ITagService _tagService;
+
+
 
         public GrpcPuppet(PuppetOptions _options, ILogger<WechatyPuppet> _logger, ILoggerFactory loggerFactory)
             : base(_options, _logger, loggerFactory)
         {
             options = _options;
             logger = _logger;
-            //_contactService = contactService;
 
-            
 
             //grpcPuppetService = new GrpcPuppetService(grpcClient);
+
+            var builder = new ContainerBuilder();
+            builder.RegisterType<WechatyPuppetService>().As<IWechatyPuppetService>();
+            builder.RegisterType<ContactService>().As<IContactService>();
+            builder.RegisterType<FriendShipService>().As<IFriendShipService>();
+            builder.RegisterType<MessageService>().As<IMessageService>();
+            builder.RegisterType<RoomService>().As<IRoomService>();
+            builder.RegisterType<TagService>().As<ITagService>();
+
+            var container = builder.Build();
+            _wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
+            _contactService = container.Resolve<IContactService>();
+            _friendShipService = container.Resolve<IFriendShipService>();
+            _messageService = container.Resolve<IMessageService>();
+            _roomService = container.Resolve<IRoomService>();
+            _tagService = container.Resolve<ITagService>();
 
         }
 
 
+
+
         #region GRPC 连接
         protected const string CHATIE_ENDPOINT = "https://api.chatie.io/v0/hosties/";
-        private PuppetClient _grpcClient = null;
-        private GrpcChannel channel = null;
+        //private PuppetClient _grpcClient = null;
+        //private GrpcChannel channel = null;
 
         /// <summary>
         /// This channel argument controls the amount of time (in milliseconds) the sender of the keepalive ping waits for an acknowledgement.
@@ -61,148 +86,13 @@ namespace Wechaty.Module.PuppetService
         /// </summary>
         private int GRPCReconnectionCount = 3;
 
-        /// <summary>
-        /// 发现 hostie gateway 对应的服务是否能能访问
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        protected async Task<HostieEndPoint> DiscoverHostieIp(string token)
-        {
-            try
-            {
-                var url = CHATIE_ENDPOINT + token;
 
-                using (var client = new HttpClient())
-                {
-                    var response = client.GetAsync(url).Result;
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var model = JsonConvert.DeserializeObject<HostieEndPoint>(await response.Content.ReadAsStringAsync());
-                        return model;
-                    }
-                }
-                throw new Exception("获取hostie gateway 对应的主机信息异常");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("获取hostie gateway 对应的主机信息异常");
-            }
-        }
-
-
-
-        /// <summary>
-        /// 初始化 Grpc连接
-        /// </summary>
-        /// <returns></returns>
-        protected async Task StartGrpcClient()
-        {
-            try
-            {
-                if (_grpcClient != null)
-                {
-                    throw new Exception("puppetClient had already inited");
-                }
-
-                var endPoint = Options.Endpoint;
-
-                if (string.IsNullOrEmpty(endPoint))
-                {
-                    var model = await DiscoverHostieIp(Options.Token);
-                    if (model.IP == "0.0.0.0" || model.Port == "0")
-                    {
-                        throw new Exception("no endpoint");
-                    }
-                    endPoint = "https://" + model.IP + ":" + model.Port;
-
-                }
-
-                if (endPoint.ToUpper().StartsWith("HTTPS://"))
-                {
-                    //throw new ApplicationException($"endpoint please set as HTTPS protocol,eg https://localhost");
-
-                    //var cert = new X509Certificate2(@"D:\coding\github\wechaty\dotnet\dotnet-wechaty\src\Wechaty.Getting.Start\Certs\client.pfx", "1111");
-
-                    //var handler = new HttpClientHandler();
-                    //handler.ClientCertificates.Add(cert);
-                    //using var httpClient = new HttpClient(handler);
-
-
-                    var credentials = CallCredentials.FromInterceptor((context, metadata) =>
-                    {
-                        if (!string.IsNullOrEmpty(Options.Token))
-                        {
-                            metadata.Add("Authorization", $"Wechaty {Options.Token}");
-                        }
-                        return Task.CompletedTask;
-                    });
-                    var channelCredentials = ChannelCredentials.Create(new SslCredentials(), credentials);
-
-                    channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
-                    {
-                        //HttpClient = httpClient,
-                        Credentials = channelCredentials,
-                        HttpHandler = new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        },
-                    });
-                }
-                else 
-                {
-
-                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
-
-                    channel = GrpcChannel.ForAddress(endPoint, new GrpcChannelOptions
-                    {
-                        //HttpClient = httpClient,
-                        Credentials = ChannelCredentials.Insecure,
-                        //HttpHandler = new HttpClientHandler
-                        //{
-                        //    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        //},
-                    });
-                }
-
-                _grpcClient = new PuppetClient(channel);
-                //_grpcClient = grpcClient;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        private static SslCredentials? _credentials;
-
-        private static SslCredentials GetSslCredentials()
-        {
-            if (_credentials == null)
-            {
-                _credentials = new SslCredentials(
-                   File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Certs", "ca.crt")),
-                    new KeyCertificatePair(
-                          File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Certs", "client.crt")),
-                         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Certs", "client.key"))));
-            }
-
-            return _credentials;
-        }
 
         /// <summary>
         /// 关闭Grpc连接
         /// </summary>
         /// <returns></returns>
-        protected async Task StopGrpcClient()
-        {
-            if (channel == null || _grpcClient == null)
-            {
-                throw new Exception("puppetClient had not initialized");
-            }
-            await channel.ShutdownAsync();
-            _grpcClient = null;
-        }
+        protected async Task StopGrpcClient() => await _wechatyPuppetService.StopGrpcClient();
 
         /// <summary>
         /// 双向数据流事件处理
@@ -211,7 +101,8 @@ namespace Wechaty.Module.PuppetService
         {
             try
             {
-                var eventStream = _grpcClient.Event(new EventRequest());
+                // var eventStream = _grpcClient.Event(new EventRequest());
+                var eventStream = _wechatyPuppetService.EventStream();
 
                 while (await eventStream.ResponseStream.MoveNext())
                 {
@@ -231,7 +122,8 @@ namespace Wechaty.Module.PuppetService
 
                 };
 
-                _grpcClient.Stop(st, call);
+                //_grpcClient.Stop(st, call);
+                await _wechatyPuppetService.StopGrpcClient();
 
                 var eventResetPayload = new EventResetPayload()
                 {
@@ -350,9 +242,11 @@ namespace Wechaty.Module.PuppetService
                     throw new ArgumentException("wechaty-puppet-hostie: token not found. See: <https://github.com/wechaty/wechaty-puppet-hostie#1-wechaty_puppet_hostie_token>");
                 }
 
-                await StartGrpcClient();
+                //await StartGrpcClient();
 
-                await _grpcClient.StartAsync(new StartRequest());
+                //await _grpcClient.StartAsync(new StartRequest());
+
+                await _wechatyPuppetService.StartAsync();
 
                 _ = StartGrpcStreamAsync();
             }

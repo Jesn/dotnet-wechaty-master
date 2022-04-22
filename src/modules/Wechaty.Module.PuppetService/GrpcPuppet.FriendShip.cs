@@ -9,40 +9,24 @@ namespace Wechaty.Module.PuppetService
 
         public override async Task FriendshipAccept(string friendshipId)
         {
-            var request = new FriendshipAcceptRequest()
-            { Id = friendshipId };
-
-            await _grpcClient.FriendshipAcceptAsync(request);
+            await _friendShipService.FriendshipAcceptAsync(friendshipId);
         }
 
         public override async Task FriendshipAdd(string contactId, string? hello)
         {
-            var request = new FriendshipAddRequest()
-            {
-                ContactId = contactId,
-                Hello = hello
-            };
-            var response = await _grpcClient.FriendshipAddAsync(request);
+            await _friendShipService.FriendshipAddAsync(contactId, hello);
         }
 
         public override async Task<string?> FriendshipSearchPhone(string phone)
         {
-            var request = new FriendshipSearchPhoneRequest()
-            {
-                Phone = phone
-            };
-
-            var response = await _grpcClient.FriendshipSearchPhoneAsync(request);
-            return response?.ContactId;
+            var response = await _friendShipService.FriendshipSearchPhoneAsync(phone);
+            return response;
         }
 
         public override async Task<string?> FriendshipSearchWeixin(string weixin)
         {
-            var request = new FriendshipSearchHandleRequest()
-            { Weixin = weixin };
-
-            var respnse = await _grpcClient.FriendshipSearchWeixinAsync(request);
-            return respnse?.ContactId;
+            var respnse = await _friendShipService.FriendshipSearchWeixinAsync(weixin);
+            return respnse;
         }
         #endregion
     }

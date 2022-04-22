@@ -8,11 +8,11 @@ namespace Wechaty.Grpc.PuppetService.Tag
 {
     public interface ITagService:IApplicationService
     {
-        Task TagContactAdd(string tagId, string contactId);
-        Task TagContactDelete(string tagId);
-        Task<List<string>> TagContactList(string contactId);
-        Task<List<string>> TagContactList();
-        Task TagContactRemove(string tagId, string contactId);
+        Task TagContactAddAsync(string tagId, string contactId);
+        Task TagContactDeleteAsync(string tagId);
+        Task<List<string>> TagContactListAsync(string contactId);
+        Task<List<string>> TagContactListAsync();
+        Task TagContactRemoveAsync(string tagId, string contactId);
 
     }
 }

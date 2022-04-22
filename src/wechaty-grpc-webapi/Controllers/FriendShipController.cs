@@ -12,28 +12,28 @@ namespace wechaty_grpc_webapi.Controllers
         [HttpPut]
         public async Task<ActionResult> FriendshipAccept(string friendshipId)
         {
-            await _friendShipService.FriendshipAccept(friendshipId);
+            await _friendShipService.FriendshipAcceptAsync(friendshipId);
             return Ok();
         }
 
         [HttpPut]
         public async Task<ActionResult> FriendshipAdd(string contactId, string? hello)
         {
-            await _friendShipService.FriendshipAdd(contactId, hello);
+            await _friendShipService.FriendshipAddAsync(contactId, hello);
             return Ok();
         }
 
         [HttpGet]
         public async Task<ActionResult> FriendshipSearchPhone(string phone)
         {
-            var response = await _friendShipService.FriendshipSearchPhone(phone);
+            var response = await _friendShipService.FriendshipSearchPhoneAsync(phone);
             return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult> FriendshipSearchWeixin(string weixin)
         {
-            var response = await _friendShipService.FriendshipSearchWeixin(weixin);
+            var response = await _friendShipService.FriendshipSearchWeixinAsync(weixin);
             return Ok(response);
         }
     }

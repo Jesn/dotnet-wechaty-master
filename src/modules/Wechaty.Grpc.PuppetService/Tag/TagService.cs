@@ -10,7 +10,7 @@ namespace Wechaty.Grpc.PuppetService.Tag
     public class TagService : WechatyPuppetService, ITagService
     {
         #region Tag
-        public async Task TagContactAdd(string tagId, string contactId)
+        public async Task TagContactAddAsync(string tagId, string contactId)
         {
             var request = new TagContactAddRequest()
             {
@@ -20,7 +20,7 @@ namespace Wechaty.Grpc.PuppetService.Tag
             await _grpcClient.TagContactAddAsync(request);
         }
 
-        public async Task TagContactDelete(string tagId)
+        public async Task TagContactDeleteAsync(string tagId)
         {
             var request = new TagContactDeleteRequest()
             {
@@ -30,7 +30,7 @@ namespace Wechaty.Grpc.PuppetService.Tag
             await _grpcClient.TagContactDeleteAsync(request);
         }
 
-        public async Task<List<string>> TagContactList(string contactId)
+        public async Task<List<string>> TagContactListAsync(string contactId)
         {
             // TODO   确认这里的 contactId 参数是否有效
             var request = new TagContactListRequest();
@@ -40,7 +40,7 @@ namespace Wechaty.Grpc.PuppetService.Tag
             return response.Ids.ToList();
         }
 
-        public async Task<List<string>> TagContactList()
+        public async Task<List<string>> TagContactListAsync()
         {
             var request = new TagContactListRequest();
 
@@ -48,7 +48,7 @@ namespace Wechaty.Grpc.PuppetService.Tag
             return response.Ids.ToList();
         }
 
-        public async Task TagContactRemove(string tagId, string contactId)
+        public async Task TagContactRemoveAsync(string tagId, string contactId)
         {
             var request = new TagContactRemoveRequest()
             {
