@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  wechaty-grpc-webapi:
+    image: wechaty-grpc-webapi
+    container_name: wechaty-grpc-webapi
+    build:
+      context: .
+      dockerfile: wechaty-grpc-webapi/Dockerfile
+    ports:
+      - '5100:80'
+    environment:
+      - TZ=Asia/Shanghai
+      - ASPNETCORE_ENVIRONMENT=Development
+      - WECHATY_PUPPET_SERVICE_ENDPOINT=https://60.168.187.175:9001
+      - WECHATY_PUPPET_SERVICE_TOKEN=insecure_4ad64522-e86d-4a18-afc9-986a9e2078ef

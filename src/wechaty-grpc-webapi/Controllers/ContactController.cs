@@ -5,6 +5,9 @@ using Wechaty.Module.Filebox;
 
 namespace wechaty_grpc_webapi.Controllers
 {
+    /// <summary>
+    /// 联系人
+    /// </summary>
     public class ContactController : WechatyApiController
     {
 
@@ -12,6 +15,11 @@ namespace wechaty_grpc_webapi.Controllers
 
         public ContactController(IContactService contactService) => _contactService = contactService;
 
+        /// <summary>
+        /// 获取别名
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult> ContactAlias(string contactId)
         {
@@ -30,7 +38,7 @@ namespace wechaty_grpc_webapi.Controllers
         public async Task<ActionResult> ContactAvatar(string contactId)
         {
             var response = await _contactService.ContactAvatarAsync(contactId);
-            return Ok(response);
+            return Ok(response.ToJson());
         }
 
         [HttpPut]

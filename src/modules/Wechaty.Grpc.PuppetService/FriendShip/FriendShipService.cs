@@ -6,6 +6,9 @@ namespace Wechaty.Grpc.PuppetService.FriendShip
 {
     public class FriendShipService : WechatyPuppetService, IFriendShipService
     {
+        public FriendShipService()
+        {
+        }
         #region Friendship
 
         public async Task<FriendshipPayload> FriendshipPayloadAsync(string friendshipId)
@@ -47,8 +50,9 @@ namespace Wechaty.Grpc.PuppetService.FriendShip
             var request = new FriendshipAddRequest()
             {
                 ContactId = contactId,
-                Hello = hello
+                Hello = hello,
             };
+            
             var response = await _grpcClient.FriendshipAddAsync(request);
         }
 

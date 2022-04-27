@@ -40,6 +40,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wechaty-grpc-webapi", "wech
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wechaty.Grpc.PuppetService", "modules\Wechaty.Grpc.PuppetService\Wechaty.Grpc.PuppetService.csproj", "{D0D79C70-E213-4E6B-B510-2F7A670F63AD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{424E675D-1110-4CD8-A5FE-033536ECA917}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +210,30 @@ Global
 		{D0D79C70-E213-4E6B-B510-2F7A670F63AD}.Release|x64.Build.0 = Release|Any CPU
 		{D0D79C70-E213-4E6B-B510-2F7A670F63AD}.Release|x86.ActiveCfg = Release|Any CPU
 		{D0D79C70-E213-4E6B-B510-2F7A670F63AD}.Release|x86.Build.0 = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|x64.Build.0 = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Debug|x86.Build.0 = Debug|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|x64.ActiveCfg = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|x64.Build.0 = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|x86.ActiveCfg = Release|Any CPU
+		{424E675D-1110-4CD8-A5FE-033536ECA917}.Release|x86.Build.0 = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|x64.Build.0 = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E4C85D9-3A6B-4403-9537-7299F2A7A3EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

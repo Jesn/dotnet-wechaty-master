@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
@@ -10,8 +8,13 @@ using Wechaty.Module.Puppet.Schemas;
 
 namespace Wechaty.Grpc.PuppetService.Contact
 {
-    public class ContactService: WechatyPuppetService,IContactService
+    public class ContactService : WechatyPuppetService,IContactService
     {
+        public ContactService()
+        {
+            
+            
+        }
         #region Contact
 
         public async Task<ContactPayload> ContactPayloadAsync(string contactId)
@@ -74,7 +77,9 @@ namespace Wechaty.Grpc.PuppetService.Contact
 
             var response = await _grpcClient.ContactAvatarAsync(request);
             var filebox = response.FileBox;
-            return FileBox.FromJson(filebox);
+            var fileBox = FileBox.FromJson(filebox);
+           
+            return fileBox;
         }
 
         public async Task ContactAvatarAsync(string contactId, FileBox file)
@@ -93,7 +98,7 @@ namespace Wechaty.Grpc.PuppetService.Contact
             return response?.Ids.ToList();
         }
 
-      
+
 
         public async Task ContactSelfNameAsync(string name)
         {

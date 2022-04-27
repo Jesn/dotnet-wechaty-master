@@ -12,6 +12,7 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Wechaty.GateWay;
 using Wechaty.Grpc.PuppetService;
 using Wechaty.Grpc.PuppetService.Contact;
 using Wechaty.Grpc.PuppetService.FriendShip;
@@ -30,7 +31,7 @@ namespace Wechaty.Module.PuppetService
         public PuppetOptions options { get; }
         protected ILogger<WechatyPuppet> logger { get; }
 
-
+        protected IGateWayService _gateWayService;
         protected IWechatyPuppetService _wechatyPuppetService;
         protected IContactService _contactService;
         protected IFriendShipService _friendShipService;
@@ -38,6 +39,9 @@ namespace Wechaty.Module.PuppetService
         protected IRoomService _roomService;
         protected ITagService _tagService;
 
+
+        protected ContainerBuilder builder = new ContainerBuilder();
+        protected IContainer container;
 
 
         public GrpcPuppet(PuppetOptions _options, ILogger<WechatyPuppet> _logger, ILoggerFactory loggerFactory)
@@ -49,7 +53,8 @@ namespace Wechaty.Module.PuppetService
 
             //grpcPuppetService = new GrpcPuppetService(grpcClient);
 
-            var builder = new ContainerBuilder();
+            //var builder = new ContainerBuilder();
+            builder.RegisterType<GateWayService>().As<IGateWayService>().SingleInstance();
             builder.RegisterType<WechatyPuppetService>().As<IWechatyPuppetService>();
             builder.RegisterType<ContactService>().As<IContactService>();
             builder.RegisterType<FriendShipService>().As<IFriendShipService>();
@@ -57,13 +62,14 @@ namespace Wechaty.Module.PuppetService
             builder.RegisterType<RoomService>().As<IRoomService>();
             builder.RegisterType<TagService>().As<ITagService>();
 
-            var container = builder.Build();
-            _wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
-            _contactService = container.Resolve<IContactService>();
-            _friendShipService = container.Resolve<IFriendShipService>();
-            _messageService = container.Resolve<IMessageService>();
-            _roomService = container.Resolve<IRoomService>();
-            _tagService = container.Resolve<ITagService>();
+            container = builder.Build();
+            //var resovler= new AutofacDependencyResolver(container);
+
+
+
+            _gateWayService = container.Resolve<IGateWayService>();
+            //_wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
+
 
         }
 
@@ -92,7 +98,7 @@ namespace Wechaty.Module.PuppetService
         /// 关闭Grpc连接
         /// </summary>
         /// <returns></returns>
-        protected async Task StopGrpcClient() => await _wechatyPuppetService.StopGrpcClient();
+        protected async Task StopGrpcClient() => await _gateWayService.StopAsync();
 
         /// <summary>
         /// 双向数据流事件处理
@@ -123,7 +129,7 @@ namespace Wechaty.Module.PuppetService
                 };
 
                 //_grpcClient.Stop(st, call);
-                await _wechatyPuppetService.StopGrpcClient();
+                await _gateWayService.StopAsync();
 
                 var eventResetPayload = new EventResetPayload()
                 {
@@ -246,9 +252,18 @@ namespace Wechaty.Module.PuppetService
 
                 //await _grpcClient.StartAsync(new StartRequest());
 
-                await _wechatyPuppetService.StartAsync();
+                await _gateWayService.StartAsync(options);
+
+                _wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
+                _contactService = container.Resolve<IContactService>();
+                _friendShipService = container.Resolve<IFriendShipService>();
+                _messageService = container.Resolve<IMessageService>();
+                _roomService = container.Resolve<IRoomService>();
+                _tagService = container.Resolve<ITagService>();
 
                 _ = StartGrpcStreamAsync();
+
+               
             }
             catch (Exception ex)
             {

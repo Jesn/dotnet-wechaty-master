@@ -26,7 +26,7 @@ namespace wechaty_grpc_webapi.Controllers
         public async Task<IActionResult> TagContactDelete(string tagId)
         {
             await _tagService.TagContactDeleteAsync(tagId);
-            return NoContent();
+            return Ok();
         }
 
 
@@ -49,7 +49,7 @@ namespace wechaty_grpc_webapi.Controllers
         public async Task<ActionResult> TagContactRemove(string tagId, string contactId)
         {
             await _tagService.TagContactRemoveAsync(tagId, contactId);
-            return NoContent();
+            return Ok();
         }
     }
 }

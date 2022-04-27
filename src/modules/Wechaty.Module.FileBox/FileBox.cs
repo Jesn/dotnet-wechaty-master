@@ -24,8 +24,9 @@ namespace Wechaty.Module.Filebox
         private Dictionary<string, object>? _metadata;
 
         private readonly string? _base64;
-        private readonly string? _url;
+        private readonly string? _remoteUrl;
         private readonly string? _qrCode;
+        private readonly string? _uuid;
 
         private readonly byte[]? _buffer;
         private readonly string? _localPath;
@@ -81,7 +82,7 @@ namespace Wechaty.Module.Filebox
                     {
                         throw new ArgumentException("no url");
                     }
-                    _url = urlOptions.Url;
+                    _remoteUrl = urlOptions.Url;
                     if (urlOptions.Headers != null)
                     {
                         _headers = urlOptions.Headers;
@@ -111,6 +112,15 @@ namespace Wechaty.Module.Filebox
                     }
                     _base64 = base64Options.Base64;
                     break;
+                case FileBoxType.Uuid:
+                    var uuidOptions = (FileBoxOptionsUuid)options;
+                    if (string.IsNullOrWhiteSpace(uuidOptions.UUID))
+                    {
+                        throw new ArgumentException("no uuid data");
+                    }
+                    _uuid=uuidOptions.UUID;
+
+                    break;
                 case FileBoxType.Unknown:
                 default:
                     break;
@@ -131,11 +141,11 @@ namespace Wechaty.Module.Filebox
             {
                 throw new InvalidOperationException("type is not Remote");
             }
-            if (string.IsNullOrWhiteSpace(_url))
+            if (string.IsNullOrWhiteSpace(_remoteUrl))
             {
                 throw new InvalidOperationException("no url");
             }
-            var headers = await Http.HeadContentHeaders(_url);
+            var headers = await Http.HeadContentHeaders(_remoteUrl);
             if (!string.IsNullOrWhiteSpace(headers.ContentDisposition.FileName))
             {
                 Name = headers.ContentDisposition.FileName;
@@ -155,14 +165,14 @@ namespace Wechaty.Module.Filebox
             switch (Type)
             {
                 case FileBoxType.Url:
-                    if (string.IsNullOrWhiteSpace(_url))
+                    if (string.IsNullOrWhiteSpace(_remoteUrl))
                     {
                         throw new InvalidOperationException("no url");
                     }
                     common = new FileBoxJsonObjectUrl
                     {
                         Headers = _headers,
-                        RemoteUrl = _url
+                        RemoteUrl = _remoteUrl
                     };
                     break;
                 case FileBoxType.QRCode:
@@ -183,6 +193,16 @@ namespace Wechaty.Module.Filebox
                     common = new FileBoxJsonObjectBase64
                     {
                         Base64 = _base64
+                    };
+                    break;
+                case FileBoxType.Uuid:
+                    if (string.IsNullOrWhiteSpace(_uuid))
+                    {
+                        throw new InvalidOperationException("no uuid data");
+                    }
+                    common = new FileBoxJsonObjectUuid
+                    {
+                        UUID=_uuid,
                     };
                     break;
                 case FileBoxType.Buffer:
@@ -218,11 +238,11 @@ namespace Wechaty.Module.Filebox
                     }
                     return File.OpenRead(_localPath);
                 case FileBoxType.Url:
-                    if (string.IsNullOrWhiteSpace(_url))
+                    if (string.IsNullOrWhiteSpace(_remoteUrl))
                     {
                         throw new InvalidOperationException("no url");
                     }
-                    return await Http.GetStream(_url, _headers);
+                    return await Http.GetStream(_remoteUrl, _headers);
                 case FileBoxType.Stream:
                     if (_stream == null)
                     {
@@ -408,6 +428,17 @@ namespace Wechaty.Module.Filebox
             return new FileBox(options);
         }
 
+        public static FileBox FromUuid([DisallowNull] string uuid, string name)
+        {
+            var options = new FileBoxOptionsUuid
+            {
+                Name = name,
+                UUID = uuid
+            };
+            return new FileBox(options);
+        }
+
+
         public static FileBox FromJson([DisallowNull] FileBoxJsonObject obj)
         {
             FileBox fileBox;
@@ -437,7 +468,7 @@ namespace Wechaty.Module.Filebox
         public static FileBox FromJson([DisallowNull] string fileboxStr)
         {
             var jsonObj = JObject.Parse(fileboxStr);
-            if (jsonObj==null)
+            if (jsonObj == null)
             {
                 return null;
             }
@@ -446,7 +477,7 @@ namespace Wechaty.Module.Filebox
             switch ((int)jsonObj["type"])
             {
                 case (int)FileBoxType.Base64:
-                    fileBox = FromBase64(jsonObj["base64"].ToString(),jsonObj["name"].ToString());
+                    fileBox = FromBase64(jsonObj["base64"].ToString(), jsonObj["name"].ToString());
                     break;
                 case (int)FileBoxType.Url:
                     //fileBox = FromUrl(((FileBoxJsonObjectUrl)obj).RemoteUrl, obj.Name);
@@ -454,6 +485,9 @@ namespace Wechaty.Module.Filebox
                     break;
                 case (int)FileBoxType.QRCode:
                     fileBox = FromQRCode(jsonObj["qrCode"].ToString());
+                    break;
+                case (int)FileBoxType.Uuid:
+                    fileBox = FromUuid(jsonObj["uuid"].ToString(), jsonObj["name"].ToString());
                     break;
                 case (int)FileBoxType.Unknown:
                 case (int)FileBoxType.Buffer:

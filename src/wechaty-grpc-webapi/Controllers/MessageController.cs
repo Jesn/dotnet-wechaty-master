@@ -24,14 +24,16 @@ namespace wechaty_grpc_webapi.Controllers
         public async Task<ActionResult> MessageFile(string messageId)
         {
             var response = await _messageService.MessageFileAsync(messageId);
-            return Ok(response);
+            await response.Ready();
+            return Ok(response.ToJson());
         }
 
         [HttpGet]
         public async Task<ActionResult> MessageImage(string messageId, ImageType imageType)
         {
             var response = await _messageService.MessageImageAsync(messageId, imageType);
-            return Ok(response);
+            await response.Ready();
+            return Ok(response.ToJson());
         }
 
         [HttpGet]

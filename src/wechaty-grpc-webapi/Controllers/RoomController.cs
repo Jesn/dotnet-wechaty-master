@@ -11,6 +11,12 @@ namespace wechaty_grpc_webapi.Controllers
         private readonly IRoomService _roomService;
         public RoomController(IRoomService roomService) => _roomService = roomService;
 
+        [HttpGet]
+        public async Task<ActionResult> GetRoomPayload(string roomId)
+        {
+            var response=await _roomService.RoomPayloadAsync(roomId);
+            return Ok(response);
+        }
 
         [HttpPut]
         public async Task<ActionResult> RoomAdd(string roomId, string contactId)
@@ -37,8 +43,9 @@ namespace wechaty_grpc_webapi.Controllers
         public async Task<ActionResult> RoomAvatar(string roomId)
         {
             var response = await _roomService.RoomAvatarAsync(roomId);
-
-            return Ok(response);
+            var jsonObj= response.ToJson();
+            
+            return Ok(jsonObj);
         }
 
         [HttpPost]
@@ -90,12 +97,13 @@ namespace wechaty_grpc_webapi.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<ActionResult> RoomTopic(string roomId)
-        {
-            var response=await _roomService.RoomTopicAsync(roomId);
-            return Ok(response);
-        }
+        // 该函数也是更新操作，所以注释了，如果想获取群消息可以通过GetRoomPayload这个接口
+        //[HttpGet]
+        //public async Task<ActionResult> RoomTopic(string roomId)
+        //{
+        //    var response=await _roomService.RoomTopicAsync(roomId);
+        //    return Ok(response);
+        //}
 
         [HttpPut]
         public async Task<ActionResult> RoomTopic(string roomId, string topic)

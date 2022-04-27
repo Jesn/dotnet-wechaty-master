@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 
@@ -9,6 +7,10 @@ namespace Wechaty.Grpc.PuppetService.Tag
 {
     public class TagService : WechatyPuppetService, ITagService
     {
+        public TagService()
+        {
+        }
+
         #region Tag
         public async Task TagContactAddAsync(string tagId, string contactId)
         {

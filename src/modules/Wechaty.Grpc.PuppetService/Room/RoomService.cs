@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Wechaty.Module.Filebox;
@@ -11,6 +10,9 @@ namespace Wechaty.Grpc.PuppetService.Room
 {
     public class RoomService : WechatyPuppetService, IRoomService
     {
+        public RoomService()
+        {
+        }
         #region Room
 
         public async Task<RoomPayload> RoomPayloadAsync(string roomId)
@@ -29,12 +31,12 @@ namespace Wechaty.Grpc.PuppetService.Room
             {
                 roomPayload = new RoomPayload
                 {
-                    AdminIdList = response.AdminIds.ToList(),
-                    Avatar = response.Avatar,
                     Id = response.Id,
-                    MemberIdList = response.MemberIds.ToList(),
+                    Avatar = response.Avatar,
                     OwnerId = response.OwnerId,
-                    Topic = response.Topic
+                    Topic = response.Topic,
+                    AdminIdList = response.AdminIds.ToList(),
+                    MemberIdList = response.MemberIds.ToList()
                 };
             }
             return roomPayload;
@@ -62,6 +64,14 @@ namespace Wechaty.Grpc.PuppetService.Room
             return response?.Text;
         }
 
+        /// <summary>
+        /// 设置群公告
+        /// 只有群主和管理员才能有权限修改
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task RoomAnnounceAsync(string roomId, string text)
         {
             var request = new RoomAnnounceRequest
@@ -70,7 +80,18 @@ namespace Wechaty.Grpc.PuppetService.Room
                 Text = text
             };
 
-            await _grpcClient.RoomAnnounceAsync(request);
+            try
+            {
+                await _grpcClient.RoomAnnounceAsync(request);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("SERVER_ERROR: 2"))
+                {
+                    throw new Exception("当前用户不是群主或者管理员，无权限修改群公告");
+                }
+                throw;
+            }
 
         }
 
@@ -80,7 +101,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             { Id = roomId };
 
             var response = await _grpcClient.RoomAvatarAsync(request);
-
+            
             return FileBox.FromJson(response.FileBox);
         }
 
@@ -93,6 +114,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             request.Topic = topic;
 
             var response = await _grpcClient.RoomCreateAsync(request);
+
             return response?.Id;
         }
 
@@ -117,6 +139,7 @@ namespace Wechaty.Grpc.PuppetService.Room
                 ContactId = contactId,
                 Id = roomId
             };
+
             await _grpcClient.RoomDelAsync(request);
         }
 
@@ -203,6 +226,7 @@ namespace Wechaty.Grpc.PuppetService.Room
             {
                 Id = roomId
             };
+
             var response = await _grpcClient.RoomQRCodeAsync(request);
             return response?.Qrcode;
         }
@@ -223,6 +247,7 @@ namespace Wechaty.Grpc.PuppetService.Room
                 Id = roomId
             };
             var response = await _grpcClient.RoomTopicAsync(request);
+            
             return response?.Topic;
         }
 

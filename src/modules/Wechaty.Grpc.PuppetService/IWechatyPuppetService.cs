@@ -12,11 +12,11 @@ namespace Wechaty.Grpc.PuppetService
 {
     public interface IWechatyPuppetService : IApplicationService
     {
-        PuppetClient InitGrpcClient(PuppetOptions options);
+        //PuppetClient InitGrpcClient(PuppetOptions options);
 
-        Task StartAsync();
+        //Task StartAsync();
 
-        Task StopGrpcClient();
+        //Task StopGrpcClient();
 
         AsyncServerStreamingCall<EventResponse> EventStream();
     }

@@ -35,7 +35,8 @@ namespace Wechaty.Getting.Start
             var PuppetOptions = new Module.Puppet.Schemas.PuppetOptions()
             {
                 Token = _configuration["WECHATY_PUPPET_SERVICE_TOKEN"],
-                Endpoint = _configuration["WECHATY_PUPPET_SERVICE_ENDPOINT"]
+                Endpoint = _configuration["WECHATY_PUPPET_SERVICE_ENDPOINT"],
+                Name= "CsharpWechaty"
             };
             bot = new Wechaty(PuppetOptions);
 

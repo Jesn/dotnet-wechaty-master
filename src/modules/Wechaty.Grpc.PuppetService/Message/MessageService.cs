@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
@@ -13,6 +11,9 @@ namespace Wechaty.Grpc.PuppetService.Message
 {
     public class MessageService:WechatyPuppetService,IMessageService
     {
+        public MessageService()
+        {
+        }
         #region Message
         public async Task<MessagePayload> MessagePayloadAsync(string messageId)
         {

@@ -8,6 +8,7 @@ namespace Wechaty.Module.Filebox
         [JsonProperty("boxType")]
         public abstract FileBoxType BoxType { get; }
 
+        [JsonIgnore]
         [JsonProperty("metadata")]
         public Dictionary<string, object> Metadata { get; set; }
 
