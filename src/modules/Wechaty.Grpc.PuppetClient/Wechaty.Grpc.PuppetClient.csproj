@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.44.0" />
+    <PackageReference Include="Wechaty.Grpc" Version="0.20.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
+    <ProjectReference Include="..\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
+  </ItemGroup>
+
+</Project>

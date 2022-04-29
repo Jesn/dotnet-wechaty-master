@@ -16,8 +16,10 @@ $projects = (
 	"src/modules/Wechaty.Module.PuppetService",
 	"src/modules/Wechaty.Module.Watchdog",
 	"src/modules/Wechaty.Module.ReactiveQueue",
+	"src/modules/Wechaty.Grpc.PuppetClient",
+	"src/modules/Wechaty.GrpcClient.Factory",
 	"src/Wechaty",
-
+	
 	"src/Plugins/Wechaty.Plugin.Contrib"
 	
 
