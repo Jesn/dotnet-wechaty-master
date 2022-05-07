@@ -38,9 +38,11 @@
   <!--<ItemGroup>
     <None Include="$(SolutionDir)wechaty.png" Pack="true" PackagePath=""/>
   </ItemGroup>-->
-  <ItemGroup>
+   
+  <!--<ItemGroup>
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-  </ItemGroup>
+  </ItemGroup>-->
+
 
   <!--Workaround for https://github.com/dotnet/sourcelink/issues/572-->
   <!--<PropertyGroup>

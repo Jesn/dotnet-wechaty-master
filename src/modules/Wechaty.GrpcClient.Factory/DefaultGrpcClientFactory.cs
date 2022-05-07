@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Wechaty.Grpc.Client;
@@ -31,6 +32,8 @@ namespace Wechaty.GrpcClient.Factory
             _logger = loggerFactory.CreateLogger<DefaultGrpcClientFactory>();
         }
 
+        
+
 
         public WechatyPuppetClient CreateClient(GrpcPuppetOption option)
         {
@@ -49,8 +52,9 @@ namespace Wechaty.GrpcClient.Factory
                 return client;
             }
 
-            client = new WechatyPuppetClient(option);
-            _ = client.StartAsync();
+            client = new WechatyPuppetClient(option, _logger);
+
+            Task.Run(async () => await client.StartAsync());
 
             PuppetClientList.GetOrAdd(option.Name, client);
 
@@ -66,9 +70,5 @@ namespace Wechaty.GrpcClient.Factory
             var client = PuppetClientList.GetValueOrDefault(name);
             return client;
         }
-
-
-
-
     }
 }

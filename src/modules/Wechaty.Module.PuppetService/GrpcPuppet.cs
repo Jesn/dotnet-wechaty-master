@@ -1,104 +1,47 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using github.wechaty.grpc.puppet;
 using Grpc.Core;
-using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Wechaty.GateWay;
-using Wechaty.Grpc.PuppetService;
-using Wechaty.Grpc.PuppetService.Contact;
-using Wechaty.Grpc.PuppetService.FriendShip;
-using Wechaty.Grpc.PuppetService.Message;
-using Wechaty.Grpc.PuppetService.Room;
-using Wechaty.Grpc.PuppetService.Tag;
+using Wechaty.Grpc.Client;
 using Wechaty.Module.Puppet;
 using Wechaty.Module.Puppet.Schemas;
-using static Wechaty.Puppet;
 
 namespace Wechaty.Module.PuppetService
 {
     public partial class GrpcPuppet : WechatyPuppet
     {
-
-        public PuppetOptions options { get; }
+        protected PuppetOptions options { get; }
         protected ILogger<WechatyPuppet> logger { get; }
 
-        protected IGateWayService _gateWayService;
-        protected IWechatyPuppetService _wechatyPuppetService;
-        protected IContactService _contactService;
-        protected IFriendShipService _friendShipService;
-        protected IMessageService _messageService;
-        protected IRoomService _roomService;
-        protected ITagService _tagService;
-
-
-        protected ContainerBuilder builder = new ContainerBuilder();
-        protected IContainer container;
-
+        protected WechatyPuppetClient _grpcClient;
 
         public GrpcPuppet(PuppetOptions _options, ILogger<WechatyPuppet> _logger, ILoggerFactory loggerFactory)
             : base(_options, _logger, loggerFactory)
         {
             options = _options;
+            options.Name = options.Name ?? "Default";
+
             logger = _logger;
 
-
-            //grpcPuppetService = new GrpcPuppetService(grpcClient);
-
-            //var builder = new ContainerBuilder();
-            builder.RegisterType<GateWayService>().As<IGateWayService>().SingleInstance();
-            builder.RegisterType<WechatyPuppetService>().As<IWechatyPuppetService>();
-            builder.RegisterType<ContactService>().As<IContactService>();
-            builder.RegisterType<FriendShipService>().As<IFriendShipService>();
-            builder.RegisterType<MessageService>().As<IMessageService>();
-            builder.RegisterType<RoomService>().As<IRoomService>();
-            builder.RegisterType<TagService>().As<ITagService>();
-
-            container = builder.Build();
-            //var resovler= new AutofacDependencyResolver(container);
-
-
-
-            _gateWayService = container.Resolve<IGateWayService>();
-            //_wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
-
-
+            _grpcClient = new WechatyPuppetClient(new GrpcPuppetOption()
+            {
+                ENDPOINT = _options.Endpoint,
+                Token = _options.Token,
+                Name = _options.Name,
+            }, _logger);
         }
 
 
-
-
         #region GRPC 连接
-        protected const string CHATIE_ENDPOINT = "https://api.chatie.io/v0/hosties/";
-        //private PuppetClient _grpcClient = null;
-        //private GrpcChannel channel = null;
-
-        /// <summary>
-        /// This channel argument controls the amount of time (in milliseconds) the sender of the keepalive ping waits for an acknowledgement.
-        /// If it does not receive an acknowledgment within this time, it will close the connection.
-        /// </summary>
-        private readonly int _keepAliveTimeoutMs = 30000;
-
-        /// <summary>
-        /// GRPC  重连次数，超过该次数则放弃重连
-        /// </summary>
-        private int GRPCReconnectionCount = 3;
-
-
 
         /// <summary>
         /// 关闭Grpc连接
         /// </summary>
         /// <returns></returns>
-        protected async Task StopGrpcClient() => await _gateWayService.StopAsync();
+        protected async Task StopGrpcClient() => await _grpcClient.StopAsync();
 
         /// <summary>
         /// 双向数据流事件处理
@@ -108,7 +51,7 @@ namespace Wechaty.Module.PuppetService
             try
             {
                 // var eventStream = _grpcClient.Event(new EventRequest());
-                var eventStream = _wechatyPuppetService.EventStream();
+                var eventStream = await _grpcClient.EventStreamAsync();
 
                 while (await eventStream.ResponseStream.MoveNext())
                 {
@@ -117,19 +60,8 @@ namespace Wechaty.Module.PuppetService
             }
             catch (Exception ex)
             {
-
-                StopRequest st = new StopRequest()
-                {
-
-                };
-
-                CallOptions call = new CallOptions()
-                {
-
-                };
-
                 //_grpcClient.Stop(st, call);
-                await _gateWayService.StopAsync();
+                await _grpcClient.StopAsync();
 
                 var eventResetPayload = new EventResetPayload()
                 {
@@ -239,6 +171,8 @@ namespace Wechaty.Module.PuppetService
         #region 实现抽象类
         public override WechatyPuppet ToImplement => this;
 
+
+        protected int GRPCReconnectionCount = 3;
         public override async Task StartGrpc()
         {
             try
@@ -248,22 +182,8 @@ namespace Wechaty.Module.PuppetService
                     throw new ArgumentException("wechaty-puppet-hostie: token not found. See: <https://github.com/wechaty/wechaty-puppet-hostie#1-wechaty_puppet_hostie_token>");
                 }
 
-                //await StartGrpcClient();
-
-                //await _grpcClient.StartAsync(new StartRequest());
-
-                await _gateWayService.StartAsync(options);
-
-                _wechatyPuppetService = container.Resolve<IWechatyPuppetService>();
-                _contactService = container.Resolve<IContactService>();
-                _friendShipService = container.Resolve<IFriendShipService>();
-                _messageService = container.Resolve<IMessageService>();
-                _roomService = container.Resolve<IRoomService>();
-                _tagService = container.Resolve<ITagService>();
-
+                await _grpcClient.StartAsync();
                 _ = StartGrpcStreamAsync();
-
-               
             }
             catch (Exception ex)
             {

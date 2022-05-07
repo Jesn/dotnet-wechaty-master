@@ -13,71 +13,57 @@ namespace Wechaty.Module.PuppetService
         #region RawPayload
         protected override async Task<ContactPayload> ContactRawPayload(string contactId)
         {
-            var payload = await _contactService.ContactPayloadAsync(contactId);
+            var payload = await _grpcClient.ContactPayloadAsync(contactId);
             return payload;
         }
 
-        protected override async Task<ContactPayload> ContactRawPayloadParser(ContactPayload rawPayload)
-        {
-            return rawPayload;
-        }
+        protected override async Task<ContactPayload> ContactRawPayloadParser(ContactPayload rawPayload) => rawPayload;
+      
 
         protected override async Task<FriendshipPayload> FriendshipRawPayload(string friendshipId)
         {
-            var payload = await _friendShipService.FriendshipPayloadAsync(friendshipId);
+            var payload = await _grpcClient.FriendshipPayloadAsync(friendshipId);
             return payload;
         }
 
-        protected override async Task<FriendshipPayload> FriendshipRawPayloadParser(FriendshipPayload rawPayload)
-        {
-            return _ = rawPayload;
-        }
+        protected override async Task<FriendshipPayload> FriendshipRawPayloadParser(FriendshipPayload rawPayload) => rawPayload;
 
         protected override async Task<MessagePayload> MessageRawPayload(string messageId)
         {
-            var payload = await _messageService.MessagePayloadAsync(messageId);
+            var payload = await _grpcClient.MessagePayloadAsync(messageId);
             return payload;
         }
 
-        protected override MessagePayload MessageRawPayloadParser(MessagePayload rawPayload)
-        {
-            return rawPayload;
-        }
+        protected override MessagePayload MessageRawPayloadParser(MessagePayload rawPayload) => rawPayload;
+
 
         protected override async Task<RoomInvitationPayload> RoomInvitationRawPayload(string roomInvitationId)
         {
 
-            var payload = await _roomService.RoomInvitationPayloadAsync(roomInvitationId);
+            var payload = await _grpcClient.RoomInvitationPayloadAsync(roomInvitationId);
             return payload;
         }
 
-        protected override async Task<RoomInvitationPayload> RoomInvitationRawPayloadParser(RoomInvitationPayload rawPayload)
-        {
-            return _ = rawPayload;
-        }
+        protected override async Task<RoomInvitationPayload> RoomInvitationRawPayloadParser(RoomInvitationPayload rawPayload) => rawPayload;
+
 
         protected override async Task<RoomMemberPayload> RoomMemberRawPayload(string roomId, string contactId)
         {
-            var payload = await _roomService.RoomMemberPayloadAsync(roomId, contactId);
+            var payload = await _grpcClient.RoomMemberPayloadAsync(roomId, contactId);
 
             return payload;
         }
 
-        protected override async Task<RoomMemberPayload> RoomMemberRawPayloadParser(RoomMemberPayload rawPayload)
-        {
-            return _ = rawPayload;
-        }
+        protected override async Task<RoomMemberPayload> RoomMemberRawPayloadParser(RoomMemberPayload rawPayload) => _ = rawPayload;
 
         protected override async Task<RoomPayload> RoomRawPayload(string roomId)
         {
-            var roomPayload = await _roomService.RoomPayloadAsync(roomId);
+            var roomPayload = await _grpcClient.RoomPayloadAsync(roomId);
             return roomPayload;
         }
 
-        protected override async Task<RoomPayload> RoomRawPayloadParser(RoomPayload rawPayload)
-        {
-            return _ = rawPayload;
-        }
+        protected override async Task<RoomPayload> RoomRawPayloadParser(RoomPayload rawPayload) => rawPayload;
+       
 
 
         #endregion
