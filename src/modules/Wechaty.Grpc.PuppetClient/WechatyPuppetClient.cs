@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using Wechaty.Module.Puppet.Schemas;
 using static Wechaty.Puppet;
 
 namespace Wechaty.Grpc.Client
@@ -24,7 +25,6 @@ namespace Wechaty.Grpc.Client
         {
             _grpcClient = DiscoverPupptClient.InitGrpcClient(_option);
             await _grpcClient.StartAsync(new StartRequest());
-
         }
 
         public async Task StopAsync() => await _grpcClient.StopAsync(new StopRequest());
@@ -33,9 +33,8 @@ namespace Wechaty.Grpc.Client
         /// <summary>
         /// 双向数据流事件处理
         /// </summary>
-        public async Task<AsyncServerStreamingCall<EventResponse>> EventStreamAsync()
+        public AsyncServerStreamingCall<EventResponse> EventStreamAsync()
         {
-            int tryCount = 3;
             try
             {
                 var eventStream = _grpcClient.Event(new EventRequest());
@@ -47,27 +46,9 @@ namespace Wechaty.Grpc.Client
                 //    return eventStream.ResponseStream.Current;
                 //}
             }
-            catch (Exception ex)
+            catch (Exception)
             {
- 
-                if (tryCount <= 0)
-                {
-                    //var eventResetPayload = new EventResetPayload()
-                    //{
-                    //    Data = ex.StackTrace
-                    //};
-                    //Emit(eventResetPayload);
-
-                    throw;
-                }
-
-                await _grpcClient.StopAsync(new StopRequest());
-                System.Threading.Thread.Sleep(2000);
-                await _grpcClient.StartAsync(new StartRequest());
-
-                tryCount--;
-
-                return await EventStreamAsync();
+                throw;
             }
         }
 

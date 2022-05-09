@@ -51,7 +51,7 @@ namespace Wechaty.Module.PuppetService
             try
             {
                 // var eventStream = _grpcClient.Event(new EventRequest());
-                var eventStream = await _grpcClient.EventStreamAsync();
+                var eventStream =  _grpcClient.EventStreamAsync();
 
                 while (await eventStream.ResponseStream.MoveNext())
                 {
