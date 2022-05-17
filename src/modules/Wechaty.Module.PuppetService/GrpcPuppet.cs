@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Wechaty.Grpc.Client;
 using Wechaty.Module.Puppet;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty.Module.PuppetService
 {

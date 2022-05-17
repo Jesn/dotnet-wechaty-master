@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
     <ProjectReference Include="..\Wechaty.Module.MemoryCard\Wechaty.Module.MemoryCard.csproj" />
     <ProjectReference Include="..\Wechaty.Module.ReactiveQueue\Wechaty.Module.ReactiveQueue.csproj" />
+    <ProjectReference Include="..\Wechaty.Module.Schemas\Wechaty.Module.Schemas.csproj" />
     <ProjectReference Include="..\Wechaty.Module.Watchdog\Wechaty.Module.Watchdog.csproj" />
   </ItemGroup>
 

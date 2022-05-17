@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using Wechaty.Module.Puppet.Schemas;
 using static Wechaty.Puppet;
 
 namespace Wechaty.Grpc.Client

@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
 using Wechaty.Module.Filebox;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty.Grpc.Client
 {
@@ -35,7 +33,7 @@ namespace Wechaty.Grpc.Client
                     MentionIdList = response.MentionIds.ToList(),
                     RoomId = response.RoomId,
                     Timestamp = (long)response.TimestampDeprecated,
-                    Type = (Module.Puppet.Schemas.MessageType)response.Type,
+                    Type = (Module.Schemas.MessageType)response.Type,
                     ToId = response.ListenerId
                 };
             }
@@ -66,7 +64,7 @@ namespace Wechaty.Grpc.Client
 
         }
 
-        public async Task<FileBox> MessageImageAsync(string messageId, Module.Puppet.Schemas.ImageType imageType)
+        public async Task<FileBox> MessageImageAsync(string messageId, Module.Schemas.ImageType imageType)
         {
             var request = new MessageImageRequest
             {
@@ -81,7 +79,7 @@ namespace Wechaty.Grpc.Client
 
 
 
-        public async Task<byte[]> MessageImageStreamAsync(string messageId, Module.Puppet.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
+        public async Task<byte[]> MessageImageStreamAsync(string messageId, Module.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
         {
             var request = new MessageImageStreamRequest
             {
@@ -111,7 +109,7 @@ namespace Wechaty.Grpc.Client
         //    return payload;
         //}
 
-        public async Task<Module.Puppet.Schemas.MiniProgramPayload> MessageMiniProgramAsync(string messageId)
+        public async Task<Module.Schemas.MiniProgramPayload> MessageMiniProgramAsync(string messageId)
         {
             var request = new MessageMiniProgramRequest
             {
@@ -119,7 +117,7 @@ namespace Wechaty.Grpc.Client
             };
             var response = await _grpcClient.MessageMiniProgramAsync(request);
             var str = JsonConvert.SerializeObject(response.MiniProgram);
-            var payload = JsonConvert.DeserializeObject<Module.Puppet.Schemas.MiniProgramPayload>(str);
+            var payload = JsonConvert.DeserializeObject<Module.Schemas.MiniProgramPayload>(str);
             return payload;
         }
 
@@ -177,7 +175,7 @@ namespace Wechaty.Grpc.Client
         //    return response?.Id;
         //}
 
-        public async Task<string?> MessageSendMiniProgramAsync(string conversationId, Module.Puppet.Schemas.MiniProgramPayload miniProgramPayload)
+        public async Task<string?> MessageSendMiniProgramAsync(string conversationId, Module.Schemas.MiniProgramPayload miniProgramPayload)
         {
             var str = JsonConvert.SerializeObject(miniProgramPayload);
 
@@ -229,7 +227,7 @@ namespace Wechaty.Grpc.Client
         //    return response?.Id;
         //}
 
-        public async Task<string?> MessageSendUrlAsync(string conversationId, Module.Puppet.Schemas.UrlLinkPayload urlLinkPayload)
+        public async Task<string?> MessageSendUrlAsync(string conversationId, Module.Schemas.UrlLinkPayload urlLinkPayload)
         {
 
             var str = JsonConvert.SerializeObject(urlLinkPayload);
@@ -256,7 +254,7 @@ namespace Wechaty.Grpc.Client
         //}
 
 
-        public async Task<Module.Puppet.Schemas.UrlLinkPayload> MessageUrlAsync(string messageId)
+        public async Task<Module.Schemas.UrlLinkPayload> MessageUrlAsync(string messageId)
         {
             var request = new MessageUrlRequest()
             {
@@ -266,7 +264,7 @@ namespace Wechaty.Grpc.Client
 
             var str = JsonConvert.SerializeObject(response.UrlLink);
 
-            return JsonConvert.DeserializeObject<Module.Puppet.Schemas.UrlLinkPayload>(str);
+            return JsonConvert.DeserializeObject<Module.Schemas.UrlLinkPayload>(str);
 
         }
 

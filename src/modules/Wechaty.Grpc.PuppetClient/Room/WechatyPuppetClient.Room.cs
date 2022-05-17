@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Wechaty.Module.Filebox;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty.Grpc.Client
 {

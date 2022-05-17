@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using QRCoder;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 using static QRCoder.PayloadGenerator;
 
 namespace Wechaty.Plugin

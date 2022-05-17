@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
     /// <summary>
     /// snake case

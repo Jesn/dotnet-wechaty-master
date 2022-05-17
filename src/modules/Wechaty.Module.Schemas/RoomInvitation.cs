@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
     public class RoomInvitationPayload
     {

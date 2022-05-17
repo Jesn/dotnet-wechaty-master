@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
     public enum FriendshipType
     {

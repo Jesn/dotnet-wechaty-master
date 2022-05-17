@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Wechaty.Module.FileBox\Wechaty.Module.FileBox.csproj" />
-    <ProjectReference Include="..\Wechaty.Module.Puppet\Wechaty.Module.Puppet.csproj" />
+    <ProjectReference Include="..\Wechaty.Module.Schemas\Wechaty.Module.Schemas.csproj" />
   </ItemGroup>
 
 </Project>

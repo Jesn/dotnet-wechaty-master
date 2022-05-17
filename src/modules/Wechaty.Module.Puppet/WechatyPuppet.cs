@@ -11,8 +11,8 @@ using Wechaty.Module.EventEmitter;
 using Wechaty.Module.Filebox;
 using Wechaty.Module.MemoryCard;
 using Wechaty.Module.ReactiveQueue;
+using Wechaty.Module.Schemas;
 using Wechaty.Module.Watchdog;
-using Wechaty.Module.Puppet.Schemas;
 
 namespace Wechaty.Module.Puppet
 {
@@ -611,8 +611,8 @@ namespace Wechaty.Module.Puppet
         #region Message
         public abstract Task<string> MessageContact(string messageId);
         public abstract Task<FileBox> MessageFile(string messageId);
-        public abstract Task<FileBox> MessageImage(string messageId, ImageType imageType);
-        public abstract Task<byte[]> MessageImageStream(string messageId, ImageType imageType, CancellationToken cancellationToken);
+        public abstract Task<FileBox> MessageImage(string messageId, Schemas.ImageType imageType);
+        public abstract Task<byte[]> MessageImageStream(string messageId, Schemas.ImageType imageType, CancellationToken cancellationToken);
         public abstract Task<MiniProgramPayload> MessageMiniProgram(string messageId);
         public abstract Task<UrlLinkPayload> MessageUrl(string messageId);
 

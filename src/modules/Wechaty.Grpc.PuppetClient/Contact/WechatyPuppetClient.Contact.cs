@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
 using Newtonsoft.Json;
 using Wechaty.Module.Filebox;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty.Grpc.Client
 {
@@ -27,11 +27,11 @@ namespace Wechaty.Grpc.Client
                 Avatar = response.Avatar,
                 City = response.City,
                 Friend = response.Friend,
-                Gender = (Module.Puppet.Schemas.ContactGender)response.Gender,
+                Gender = (Module.Schemas.ContactGender)response.Gender,
                 Province = response.Province,
                 Signature = response.Signature,
                 Star = response.Star,
-                Type = (Module.Puppet.Schemas.ContactType)response.Type,
+                Type = (Module.Schemas.ContactType)response.Type,
                 Weixin = response.Weixin,
             };
             return payload;

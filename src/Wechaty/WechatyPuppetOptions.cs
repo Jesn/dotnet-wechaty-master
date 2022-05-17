@@ -1,7 +1,7 @@
 using System;
 using Wechaty.Module.MemoryCard;
 using Wechaty.Module.Puppet;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty
 {

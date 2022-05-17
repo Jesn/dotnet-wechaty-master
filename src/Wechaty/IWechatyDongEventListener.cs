@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 using Wechaty.User;
 
 namespace Wechaty

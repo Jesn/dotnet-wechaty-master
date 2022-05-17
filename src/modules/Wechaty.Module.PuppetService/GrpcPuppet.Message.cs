@@ -21,7 +21,7 @@ namespace Wechaty.Module.PuppetService
 
         }
 
-        public override async Task<FileBox> MessageImage(string messageId, Puppet.Schemas.ImageType imageType)
+        public override async Task<FileBox> MessageImage(string messageId, Schemas.ImageType imageType)
         {
             var response = await _grpcClient.MessageImageAsync(messageId, imageType);
             return response;
@@ -29,7 +29,7 @@ namespace Wechaty.Module.PuppetService
 
 
 
-        public override async Task<byte[]> MessageImageStream(string messageId, Puppet.Schemas.ImageType imageType, CancellationToken cancellationToken = default)
+        public override async Task<byte[]> MessageImageStream(string messageId, Schemas.ImageType imageType, CancellationToken cancellationToken = default)
         {
             var response = await _grpcClient.MessageImageStreamAsync(messageId, imageType, cancellationToken);
             return response;
@@ -47,7 +47,7 @@ namespace Wechaty.Module.PuppetService
         //    return payload;
         //}
 
-        public override async Task<Puppet.Schemas.MiniProgramPayload> MessageMiniProgram(string messageId)
+        public override async Task<Schemas.MiniProgramPayload> MessageMiniProgram(string messageId)
         {
             var response = await _grpcClient.MessageMiniProgramAsync(messageId);
             return response;
@@ -83,7 +83,7 @@ namespace Wechaty.Module.PuppetService
         //    return response?.Id;
         //}
 
-        public override async Task<string?> MessageSendMiniProgram(string conversationId, Puppet.Schemas.MiniProgramPayload miniProgramPayload)
+        public override async Task<string?> MessageSendMiniProgram(string conversationId, Schemas.MiniProgramPayload miniProgramPayload)
         {
             var response = await _grpcClient.MessageSendMiniProgramAsync(conversationId, miniProgramPayload);
             return response;
@@ -113,7 +113,7 @@ namespace Wechaty.Module.PuppetService
         //    return response?.Id;
         //}
 
-        public override async Task<string?> MessageSendUrl(string conversationId, Puppet.Schemas.UrlLinkPayload urlLinkPayload)
+        public override async Task<string?> MessageSendUrl(string conversationId, Schemas.UrlLinkPayload urlLinkPayload)
         {
             var response = await _grpcClient.MessageSendUrlAsync(conversationId,urlLinkPayload);
             return response;
@@ -132,7 +132,7 @@ namespace Wechaty.Module.PuppetService
         //}
 
 
-        public override async Task<Puppet.Schemas.UrlLinkPayload> MessageUrl(string messageId)
+        public override async Task<Schemas.UrlLinkPayload> MessageUrl(string messageId)
         {
             var response = await _grpcClient.MessageUrlAsync(messageId);
             return response;

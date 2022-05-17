@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Wechaty.Module.Schemas;
 using Wechaty.User;
 
 namespace Wechaty.Plugin
@@ -34,20 +32,20 @@ namespace Wechaty.Plugin
                 var friendshipType = friendship.Type;
                 switch (friendshipType)
                 {
-                    case Module.Puppet.Schemas.FriendshipType.Confirm:
+                    case FriendshipType.Confirm:
                         var contact = friendship.Contact;
                         await contact.Say(config.Greeting);
                         break;
-                    case Module.Puppet.Schemas.FriendshipType.Receive:
+                    case FriendshipType.Receive:
                         var hello = friendship.Hello;
                         if (hello.Contains(config.Greeting))
                         {
                             await friendship.Accept();
                         }
                         break;
-                    case Module.Puppet.Schemas.FriendshipType.Unknown:
+                    case FriendshipType.Unknown:
                         break;
-                    case Module.Puppet.Schemas.FriendshipType.Verify:
+                    case FriendshipType.Verify:
                         break;
                     default:
                         break;

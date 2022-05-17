@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using github.wechaty.grpc.puppet;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 
 namespace Wechaty.Grpc.Client
 {
@@ -32,7 +28,7 @@ namespace Wechaty.Grpc.Client
                     Scene = (int)response.Scene,
                     Stranger = response.Stranger,
                     Ticket = response.Ticket,
-                    Type = (Module.Puppet.Schemas.FriendshipType)response.Type
+                    Type = (Module.Schemas.FriendshipType)response.Type
                 };
             }
             return payload;

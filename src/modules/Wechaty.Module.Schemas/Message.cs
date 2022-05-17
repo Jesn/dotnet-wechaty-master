@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
     public enum MessageType
     {

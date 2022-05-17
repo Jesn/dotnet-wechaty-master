@@ -10,8 +10,8 @@ using Wechaty.Module.EventEmitter;
 using Wechaty.Module.Filebox;
 using Wechaty.Module.MemoryCard;
 using Wechaty.Module.Puppet;
-using Wechaty.Module.Puppet.Schemas;
 using Wechaty.Module.PuppetService;
+using Wechaty.Module.Schemas;
 using Wechaty.User;
 
 namespace Wechaty

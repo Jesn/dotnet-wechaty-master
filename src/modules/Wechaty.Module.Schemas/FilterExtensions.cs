@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
-    internal static class FilterExtensions
+    public static class FilterExtensions
     {
         public static Func<TElement, bool> Every<TFilter, TElement>(this TFilter filter)
             where TFilter : IFilter

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Wechaty.Module.Puppet.Schemas;
+using Wechaty.Module.Schemas;
 using Wechaty.User;
 
 namespace Wechaty.Plugin

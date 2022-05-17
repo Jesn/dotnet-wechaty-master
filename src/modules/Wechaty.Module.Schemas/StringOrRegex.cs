@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Wechaty.Module.Puppet.Schemas
+namespace Wechaty.Module.Schemas
 {
     /// <summary>
     /// 文本或正则表达式包装

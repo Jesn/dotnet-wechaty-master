@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Wechaty.Module.Schemas;
 using Wechaty.Plugin;
 using Wechaty.User;
 
@@ -32,13 +33,13 @@ namespace Wechaty.Getting.Start
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var PuppetOptions = new Module.Puppet.Schemas.PuppetOptions()
+            var puppetOptions = new PuppetOptions()
             {
                 Token = _configuration["WECHATY_PUPPET_SERVICE_TOKEN"],
                 Endpoint = _configuration["WECHATY_PUPPET_SERVICE_ENDPOINT"],
                 Name= "CsharpWechaty"
             };
-            bot = new Wechaty(PuppetOptions);
+            bot = new Wechaty(puppetOptions);
 
 
             // Automatic plug-in registration
